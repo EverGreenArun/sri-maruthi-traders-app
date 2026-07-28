@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Login — Sri Maruthi Traders</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Barlow+Condensed:wght@700&display=swap" rel="stylesheet">
+<style>
+  :root { --ink:#1E2128; --paper:#F7F5F0; --copper:#C97A3D; --slate:#4A5560; --line:#E2DED4; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; min-height: 100vh; display: flex; align-items: center; justify-content: center;
+    background: var(--ink); font-family: 'Inter', sans-serif; color: var(--ink); padding: 20px;
+  }
+  .card { background: var(--paper); border-radius: 12px; padding: 40px 32px; max-width: 380px; width: 100%; }
+  h1 { font-family: 'Barlow Condensed', sans-serif; font-size: 28px; margin: 0 0 4px; }
+  .sub { color: var(--slate); font-size: 14px; margin-bottom: 28px; }
+  label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 6px; color: var(--ink); }
+  input {
+    width: 100%; padding: 12px 14px; border: 1.5px solid var(--line); border-radius: 8px;
+    font-size: 15px; margin-bottom: 18px; outline: none; font-family: 'Inter', sans-serif;
+  }
+  input:focus { border-color: var(--copper); }
+  button {
+    width: 100%; padding: 13px; background: var(--copper); color: #fff; border: none;
+    border-radius: 8px; font-size: 15px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif;
+  }
+  button:hover { background: #b8692f; }
+  button:disabled { opacity: 0.6; cursor: not-allowed; }
+  .error { color: #C0392B; font-size: 13px; margin-bottom: 16px; display: none; }
+  .back-link { display: block; text-align: center; margin-top: 20px; font-size: 13px; color: var(--slate); text-decoration: none; }
+</style>
+</head>
+<body>
+  <div class="card">
+    <h1>Admin Login</h1>
+    <div class="sub">Sri Maruthi Traders — price list management</div>
+    <div class="error" id="error"></div>
+    <form id="login-form">
+      <label for="username">Username</label>
+      <input type="text" id="username" autocomplete="username" required>
+      <label for="password">Password</label>
+      <input type="password" id="password" autocomplete="current-password" required>
+      <button type="submit" id="submit-btn">Log in</button>
+    </form>
+    <a href="/" class="back-link">← Back to price list</a>
+  </div>
+
+  <script>
+    const form = document.getElementById('login-form');
+    const errorEl = document.getElementById('error');
+    const btn = document.getElementById('submit-btn');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      errorEl.style.display = 'none';
+      btn.disabled = true;
+      btn.textContent = 'Logging in…';
+
+      try {
+        const res = await fetch('/api/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            username: document.getElementById('username').value,
+            password: document.getElementById('password').value
+          })
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Login failed');
+        window.location.href = '/admin.html';
+      } catch (err) {
+        errorEl.textContent = err.message;
+        errorEl.style.display = 'block';
+        btn.disabled = false;
+        btn.textContent = 'Log in';
+      }
+    });
+  </script>
+</body>
+</html>

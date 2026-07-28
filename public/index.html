@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sri Maruthi Traders — Price List</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Barlow+Condensed:wght@600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1E2128; --paper: #F7F5F0; --copper: #C97A3D;
+    --slate: #4A5560; --amber: #E8A33D; --line: #E2DED4;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--paper); color: var(--ink); font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; }
+
+  header { background: var(--ink); color: var(--paper); padding: 48px 24px 40px; position: relative; overflow: hidden; }
+  header::after {
+    content: ""; position: absolute; bottom: 0; left: 0; right: 0; height: 3px;
+    background: repeating-linear-gradient(90deg, var(--copper) 0px, var(--copper) 24px, transparent 24px, transparent 32px);
+  }
+  .header-inner { max-width: 780px; margin: 0 auto; }
+  .eyebrow { font-size: 13px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--amber); font-weight: 600; margin-bottom: 8px; }
+  h1 { font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: clamp(36px, 7vw, 56px); letter-spacing: -0.01em; margin: 0 0 8px; line-height: 1; }
+  .subtitle { color: #B8BEC7; font-size: 15px; max-width: 480px; line-height: 1.5; }
+  .updated { margin-top: 20px; font-size: 13px; color: var(--copper); font-weight: 500; }
+
+  main { max-width: 780px; margin: 0 auto; padding: 40px 24px 20px; }
+  .search-row { margin-bottom: 32px; }
+  #search {
+    width: 100%; padding: 14px 16px; font-family: 'Inter', sans-serif; font-size: 15px;
+    border: 1.5px solid var(--line); border-radius: 8px; background: #fff; color: var(--ink);
+    outline: none; transition: border-color 0.15s ease;
+  }
+  #search:focus { border-color: var(--copper); }
+  #search::placeholder { color: #9BA3AC; }
+
+  .category { margin-bottom: 40px; }
+  .category-head { display: flex; align-items: baseline; gap: 12px; margin-bottom: 4px; padding-left: 16px; border-left: 3px solid var(--copper); }
+  .category-head h2 { font-family: 'Barlow Condensed', sans-serif; font-size: 24px; font-weight: 700; margin: 0; letter-spacing: 0.01em; }
+  .category-count { font-size: 13px; color: var(--slate); }
+  .wire-divider { height: 14px; margin: 4px 0 14px 16px; background-image: linear-gradient(to bottom, transparent 45%, var(--line) 45%, var(--line) 55%, transparent 55%); }
+
+  .subcategory { margin: 6px 0 18px 16px; }
+  .subcategory-head { font-family: 'Barlow Condensed', sans-serif; font-size: 17px; font-weight: 700; color: var(--slate); margin: 0 0 4px; }
+
+  .item-list { display: flex; flex-direction: column; }
+  .item-row { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 14px 16px; border-bottom: 1px solid var(--line); transition: background 0.12s ease; }
+  .item-row:hover { background: rgba(201, 122, 61, 0.06); }
+  .item-name { font-size: 15px; font-weight: 600; color: var(--ink); }
+  .item-unit { font-size: 13px; color: var(--slate); margin-top: 2px; }
+  .item-price { font-family: 'Barlow Condensed', sans-serif; font-size: 20px; font-weight: 700; color: var(--ink); white-space: nowrap; flex-shrink: 0; }
+  .item-price .rupee { color: var(--copper); font-size: 16px; margin-right: 2px; }
+
+  .no-results, .loading { text-align: center; color: var(--slate); padding: 40px 0; font-size: 14px; }
+  .no-results { display: none; }
+
+  /* Contact card */
+  .contact-card {
+    max-width: 780px; margin: 20px auto 0; padding: 24px; background: #fff;
+    border: 1px solid var(--line); border-radius: 12px; display: flex; flex-wrap: wrap; gap: 20px;
+  }
+  .contact-item { flex: 1; min-width: 180px; }
+  .contact-label { font-size: 12px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--slate); font-weight: 600; margin-bottom: 4px; }
+  .contact-value { font-size: 15px; font-weight: 600; color: var(--ink); }
+  .contact-value a { color: var(--copper); text-decoration: none; }
+  .contact-value a:hover { text-decoration: underline; }
+
+  footer { text-align: center; padding: 32px 24px 48px; color: var(--slate); font-size: 13px; }
+  footer strong { color: var(--ink); }
+  footer a { color: var(--slate); }
+
+  @media (max-width: 480px) {
+    .item-price { font-size: 18px; }
+    header { padding: 36px 20px 32px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="eyebrow" id="tagline">Madurai · Electrical &amp; Hardware Supplies</div>
+    <h1 id="shop-name">Sri Maruthi Traders</h1>
+    <p class="subtitle">Current price list for water line clamp, apartment clamp, bore cover, bore clamp, motor bed, cable clip, wire tag.</p>
+    <div class="updated" id="last-updated"></div>
+  </div>
+</header>
+
+<main>
+  <div class="search-row">
+    <input type="text" id="search" placeholder="Search for an item…">
+  </div>
+  <div class="loading" id="loading">Loading price list…</div>
+  <div id="catalog"></div>
+  <div class="no-results" id="no-results">No items match your search.</div>
+</main>
+
+<div class="contact-card" id="contact-card" style="display:none;">
+  <div class="contact-item">
+    <div class="contact-label">Phone</div>
+    <div class="contact-value"><a id="contact-phone" href="#"></a></div>
+  </div>
+  <div class="contact-item">
+    <div class="contact-label">WhatsApp</div>
+    <div class="contact-value"><a id="contact-whatsapp" href="#" target="_blank">Chat on WhatsApp</a></div>
+  </div>
+  <div class="contact-item">
+    <div class="contact-label">Address</div>
+    <div class="contact-value" id="contact-address"></div>
+  </div>
+</div>
+
+<footer>
+  Prices subject to change without notice. For bulk orders, contact <strong id="footer-shop-name">Sri Maruthi Traders</strong>.
+</footer>
+
+<script>
+  let CATALOG = [];
+
+  function formatPrice(n) { return n.toLocaleString('en-IN'); }
+
+  function renderCatalog(filterText) {
+    const catalogEl = document.getElementById('catalog');
+    const noResults = document.getElementById('no-results');
+    catalogEl.innerHTML = '';
+    let anyVisible = false;
+    const q = (filterText || '').trim().toLowerCase();
+
+    function buildItemList(items) {
+      const list = document.createElement('div');
+      list.className = 'item-list';
+      items.forEach(item => {
+        const row = document.createElement('div');
+        row.className = 'item-row';
+        row.innerHTML = `
+          <div class="item-info">
+            <div class="item-name">${item.name}</div>
+            ${item.unit ? `<div class="item-unit">${item.unit}</div>` : ''}
+          </div>
+          <div class="item-price"><span class="rupee">₹</span>${formatPrice(item.price)}</div>
+        `;
+        list.appendChild(row);
+      });
+      return list;
+    }
+
+    CATALOG.forEach(cat => {
+      const filteredItems = cat.items.filter(item => !q || item.name.toLowerCase().includes(q));
+      const filteredSubs = (cat.subcategories || [])
+        .map(sub => ({ ...sub, items: sub.items.filter(item => !q || item.name.toLowerCase().includes(q)) }))
+        .filter(sub => sub.items.length > 0);
+
+      const totalCount = filteredItems.length + filteredSubs.reduce((n, s) => n + s.items.length, 0);
+      if (totalCount === 0) return;
+      anyVisible = true;
+
+      const section = document.createElement('div');
+      section.className = 'category';
+      section.innerHTML = `
+        <div class="category-head">
+          <h2>${cat.name}</h2>
+          <span class="category-count">${totalCount} item${totalCount !== 1 ? 's' : ''}</span>
+        </div>
+        <div class="wire-divider"></div>
+      `;
+
+      if (filteredItems.length > 0) {
+        section.appendChild(buildItemList(filteredItems));
+      }
+
+      filteredSubs.forEach(sub => {
+        const subSection = document.createElement('div');
+        subSection.className = 'subcategory';
+        subSection.innerHTML = `<div class="subcategory-head">${sub.name}</div>`;
+        subSection.appendChild(buildItemList(sub.items));
+        section.appendChild(subSection);
+      });
+
+      catalogEl.appendChild(section);
+    });
+
+    noResults.style.display = anyVisible ? 'none' : 'block';
+  }
+
+  async function loadCatalog() {
+    try {
+      const res = await fetch('/api/catalog');
+      const data = await res.json();
+      CATALOG = data.catalog || [];
+
+      const info = data.shopInfo || {};
+      if (info.shop_name) {
+        document.getElementById('shop-name').textContent = info.shop_name;
+        document.getElementById('footer-shop-name').textContent = info.shop_name;
+        document.title = info.shop_name + ' — Price List';
+      }
+      if (info.tagline) document.getElementById('tagline').textContent = info.tagline;
+      if (info.last_updated) document.getElementById('last-updated').textContent = `Last updated: ${info.last_updated}`;
+
+      if (info.phone || info.whatsapp || info.address) {
+        document.getElementById('contact-card').style.display = 'flex';
+        if (info.phone) {
+          const phoneEl = document.getElementById('contact-phone');
+          phoneEl.textContent = info.phone;
+          phoneEl.href = 'tel:' + info.phone.replace(/\s+/g, '');
+        }
+        if (info.whatsapp) {
+          const waEl = document.getElementById('contact-whatsapp');
+          waEl.href = 'https://wa.me/' + info.whatsapp.replace(/[^0-9]/g, '');
+        }
+        if (info.address) document.getElementById('contact-address').textContent = info.address;
+      }
+
+      document.getElementById('loading').style.display = 'none';
+      renderCatalog('');
+    } catch (err) {
+      document.getElementById('loading').textContent = 'Could not load price list. Please try again shortly.';
+    }
+  }
+
+  document.getElementById('search').addEventListener('input', (e) => renderCatalog(e.target.value));
+  loadCatalog();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin — Sri Maruthi Traders</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Barlow+Condensed:wght@700&display=swap" rel="stylesheet">
+<style>
+  :root { --ink:#1E2128; --paper:#F7F5F0; --copper:#C97A3D; --slate:#4A5560; --amber:#E8A33D; --line:#E2DED4; --danger:#C0392B; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--paper); color: var(--ink); font-family: 'Inter', sans-serif; }
+
+  .topbar {
+    background: var(--ink); color: #fff; padding: 18px 24px; display: flex;
+    justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;
+  }
+  .topbar h1 { font-family: 'Barlow Condensed', sans-serif; font-size: 22px; margin: 0; }
+  .topbar .actions { display: flex; gap: 10px; align-items: center; }
+  .topbar a, .topbar button {
+    font-size: 13px; color: #fff; background: rgba(255,255,255,0.12); border: none;
+    padding: 8px 14px; border-radius: 6px; cursor: pointer; text-decoration: none; font-family: 'Inter', sans-serif;
+  }
+  .topbar a:hover, .topbar button:hover { background: rgba(255,255,255,0.2); }
+
+  main { max-width: 860px; margin: 0 auto; padding: 32px 24px 80px; }
+
+  .panel { background: #fff; border: 1px solid var(--line); border-radius: 10px; padding: 24px; margin-bottom: 24px; }
+  .panel h2 { font-family: 'Barlow Condensed', sans-serif; font-size: 20px; margin: 0 0 16px; }
+
+  .field-row { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 12px; }
+  .field { flex: 1; min-width: 140px; }
+  .field label { display: block; font-size: 12px; font-weight: 600; color: var(--slate); margin-bottom: 4px; }
+  .field input {
+    width: 100%; padding: 10px 12px; border: 1.5px solid var(--line); border-radius: 6px;
+    font-size: 14px; font-family: 'Inter', sans-serif; outline: none;
+  }
+  .field input:focus { border-color: var(--copper); }
+
+  .btn {
+    padding: 10px 16px; border: none; border-radius: 6px; font-size: 14px; font-weight: 600;
+    cursor: pointer; font-family: 'Inter', sans-serif;
+  }
+  .btn-primary { background: var(--copper); color: #fff; }
+  .btn-primary:hover { background: #b8692f; }
+  .btn-secondary { background: var(--paper); color: var(--ink); border: 1.5px solid var(--line); }
+  .btn-secondary:hover { background: #ECE8DE; }
+  .btn-danger { background: transparent; color: var(--danger); }
+  .btn-danger:hover { text-decoration: underline; }
+  .btn-small { padding: 6px 10px; font-size: 12px; }
+
+  .category-block { border: 1px solid var(--line); border-radius: 8px; margin-bottom: 16px; overflow: hidden; }
+  .category-block-head {
+    display: flex; justify-content: space-between; align-items: center; padding: 12px 16px;
+    background: var(--paper); border-bottom: 1px solid var(--line);
+  }
+  .category-block-head input {
+    font-family: 'Barlow Condensed', sans-serif; font-size: 18px; font-weight: 700; border: none;
+    background: transparent; outline: none; padding: 4px; border-radius: 4px; width: 60%;
+  }
+  .category-block-head input:focus { background: #fff; box-shadow: 0 0 0 1.5px var(--copper); }
+
+  .item-row-admin {
+    display: grid; grid-template-columns: 2fr 1fr 100px auto; gap: 8px; align-items: center;
+    padding: 10px 16px; border-bottom: 1px solid #F0EDE4;
+  }
+  .item-row-admin input {
+    padding: 8px 10px; border: 1.5px solid var(--line); border-radius: 6px; font-size: 13px; font-family: 'Inter', sans-serif; outline: none;
+  }
+  .item-row-admin input:focus { border-color: var(--copper); }
+  .add-item-row { padding: 12px 16px; }
+
+  .subcategory-block { margin: 10px 16px 14px; border: 1px solid var(--line); border-radius: 6px; overflow: hidden; }
+  .subcategory-head {
+    display: flex; justify-content: space-between; align-items: center; padding: 8px 12px;
+    background: #FBFAF6; border-bottom: 1px solid #F0EDE4;
+  }
+  .subcategory-head input {
+    font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 600; border: none;
+    background: transparent; outline: none; padding: 4px; border-radius: 4px; width: 60%;
+  }
+  .subcategory-head input:focus { background: #fff; box-shadow: 0 0 0 1.5px var(--copper); }
+  .add-subcategory-row { padding: 10px 16px; display: flex; gap: 8px; }
+  .add-subcategory-row input { flex: 1; padding: 8px 10px; border: 1.5px solid var(--line); border-radius: 6px; font-size: 13px; font-family: 'Inter', sans-serif; outline: none; }
+  .field-hint { font-size: 11px; color: var(--slate); margin: -8px 0 12px 2px; }
+
+  .status-msg {
+    font-size: 13px; padding: 10px 14px; border-radius: 6px; margin-bottom: 16px; display: none;
+  }
+  .status-msg.success { background: #E8F5E9; color: #2E7D32; display: block; }
+  .status-msg.error { background: #FDECEA; color: var(--danger); display: block; }
+
+  .loading-msg { text-align: center; color: var(--slate); padding: 40px 0; }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <h1>Admin — Sri Maruthi Traders</h1>
+  <div class="actions">
+    <a href="/" target="_blank">View public page ↗</a>
+    <button id="change-pw-btn">Change password</button>
+    <button id="logout-btn">Log out</button>
+  </div>
+</div>
+
+<main>
+  <div class="status-msg" id="status"></div>
+  <div class="loading-msg" id="loading">Loading…</div>
+
+  <div id="app" style="display:none;">
+    <div class="panel">
+      <h2>Shop details (shown on public page)</h2>
+      <div class="field-row">
+        <div class="field"><label>Shop name</label><input id="shop_name"></div>
+        <div class="field"><label>Tagline</label><input id="tagline"></div>
+      </div>
+      <div class="field-row">
+        <div class="field"><label>Phone</label><input id="phone" placeholder="+91 90000 00000"></div>
+        <div class="field"><label>WhatsApp number</label><input id="whatsapp" placeholder="+91 90000 00000"></div>
+      </div>
+      <div class="field-row">
+        <div class="field"><label>Address</label><input id="address"></div>
+      </div>
+      <button class="btn btn-primary" id="save-shop-info">Save shop details</button>
+    </div>
+
+    <div class="panel">
+      <h2>Price list</h2>
+      <div class="field-hint">Tip: click directly into any category, subcategory, or item name to rename it — it saves when you click away.</div>
+      <div id="categories-container"></div>
+      <div class="field-row" style="margin-top: 16px;">
+        <div class="field"><input id="new-category-name" placeholder="New category name (e.g. Fans & Motors)"></div>
+        <button class="btn btn-secondary" id="add-category-btn">+ Add category</button>
+      </div>
+    </div>
+  </div>
+</main>
+
+<script>
+  let CATALOG = [];
+
+  function showStatus(msg, type) {
+    const el = document.getElementById('status');
+    el.textContent = msg;
+    el.className = 'status-msg ' + type;
+    setTimeout(() => { el.style.display = 'none'; }, 3500);
+  }
+
+  async function checkAuth() {
+    const res = await fetch('/api/me');
+    if (!res.ok) {
+      window.location.href = '/admin-login.html';
+      return false;
+    }
+    return true;
+  }
+
+  async function loadData() {
+    const res = await fetch('/api/catalog');
+    const data = await res.json();
+    CATALOG = data.catalog || [];
+    const info = data.shopInfo || {};
+
+    document.getElementById('shop_name').value = info.shop_name || '';
+    document.getElementById('tagline').value = info.tagline || '';
+    document.getElementById('phone').value = info.phone || '';
+    document.getElementById('whatsapp').value = info.whatsapp || '';
+    document.getElementById('address').value = info.address || '';
+
+    renderCategories();
+    document.getElementById('loading').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+  }
+
+  function itemsBlock(items, ownerId) {
+    const wrap = document.createElement('div');
+    items.forEach(item => {
+      const row = document.createElement('div');
+      row.className = 'item-row-admin';
+      row.innerHTML = `
+        <input value="${escapeAttr(item.name)}" data-item-id="${item.id}" data-field="name" placeholder="Item name">
+        <input value="${escapeAttr(item.unit || '')}" data-item-id="${item.id}" data-field="unit" placeholder="Unit (e.g. per piece)">
+        <input value="${item.price}" data-item-id="${item.id}" data-field="price" type="number" step="0.01" placeholder="Price">
+        <button class="btn btn-danger btn-small" data-delete-item="${item.id}">✕</button>
+      `;
+      wrap.appendChild(row);
+    });
+
+    const addRow = document.createElement('div');
+    addRow.className = 'add-item-row';
+    addRow.innerHTML = `
+      <div class="field-row" style="margin-bottom:0;">
+        <div class="field"><input placeholder="New item name" data-new-item-name="${ownerId}"></div>
+        <div class="field"><input placeholder="Unit" data-new-item-unit="${ownerId}"></div>
+        <div class="field" style="max-width:100px;"><input placeholder="Price" type="number" step="0.01" data-new-item-price="${ownerId}"></div>
+        <button class="btn btn-secondary btn-small" data-add-item="${ownerId}">+ Add item</button>
+      </div>
+    `;
+    wrap.appendChild(addRow);
+    return wrap;
+  }
+
+  function renderCategories() {
+    const container = document.getElementById('categories-container');
+    container.innerHTML = '';
+
+    CATALOG.forEach(cat => {
+      const block = document.createElement('div');
+      block.className = 'category-block';
+
+      const head = document.createElement('div');
+      head.className = 'category-block-head';
+      head.innerHTML = `
+        <input value="${escapeAttr(cat.name)}" data-cat-id="${cat.id}" class="cat-name-input">
+        <button class="btn btn-danger btn-small" data-delete-cat="${cat.id}">Delete category</button>
+      `;
+      block.appendChild(head);
+
+      block.appendChild(itemsBlock(cat.items, cat.id));
+
+      (cat.subcategories || []).forEach(sub => {
+        const subBlock = document.createElement('div');
+        subBlock.className = 'subcategory-block';
+
+        const subHead = document.createElement('div');
+        subHead.className = 'subcategory-head';
+        subHead.innerHTML = `
+          <input value="${escapeAttr(sub.name)}" data-subcat-id="${sub.id}" class="subcat-name-input">
+          <button class="btn btn-danger btn-small" data-delete-cat="${sub.id}">Delete subcategory</button>
+        `;
+        subBlock.appendChild(subHead);
+        subBlock.appendChild(itemsBlock(sub.items, sub.id));
+
+        block.appendChild(subBlock);
+      });
+
+      const addSubRow = document.createElement('div');
+      addSubRow.className = 'add-subcategory-row';
+      addSubRow.innerHTML = `
+        <input placeholder="New subcategory name (e.g. LED Bulbs)" data-new-subcat="${cat.id}">
+        <button class="btn btn-secondary btn-small" data-add-subcat="${cat.id}">+ Add subcategory</button>
+      `;
+      block.appendChild(addSubRow);
+
+      container.appendChild(block);
+    });
+
+    attachHandlers();
+  }
+
+  function escapeAttr(str) {
+    return String(str).replace(/&/g, '&amp;').replace(/"/g, '&quot;');
+  }
+
+  function attachHandlers() {
+    // Category name edit (on blur)
+    document.querySelectorAll('.cat-name-input').forEach(input => {
+      input.addEventListener('blur', async () => {
+        const id = input.dataset.catId;
+        await fetch(`/api/admin/categories/${id}`, {
+          method: 'PUT', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name: input.value })
+        });
+        showStatus('Category updated', 'success');
+      });
+    });
+
+    // Delete category (or subcategory — same endpoint)
+    document.querySelectorAll('[data-delete-cat]').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        if (!confirm('Delete this category and all its items?')) return;
+        await fetch(`/api/admin/categories/${btn.dataset.deleteCat}`, { method: 'DELETE' });
+        showStatus('Category deleted', 'success');
+        await refreshCatalog();
+      });
+    });
+
+    // Subcategory name edit (on blur)
+    document.querySelectorAll('.subcat-name-input').forEach(input => {
+      input.addEventListener('blur', async () => {
+        const id = input.dataset.subcatId;
+        await fetch(`/api/admin/categories/${id}`, {
+          method: 'PUT', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name: input.value })
+        });
+        showStatus('Subcategory updated', 'success');
+      });
+    });
+
+    // Add subcategory
+    document.querySelectorAll('[data-add-subcat]').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        const parentId = btn.dataset.addSubcat;
+        const input = document.querySelector(`[data-new-subcat="${parentId}"]`);
+        if (!input.value.trim()) return;
+        const res = await fetch('/api/admin/categories', {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name: input.value, parent_id: parentId })
+        });
+        if (res.ok) { showStatus('Subcategory added', 'success'); await refreshCatalog(); }
+        else showStatus('Could not add subcategory', 'error');
+      });
+    });
+
+    // Item field edit (on blur)
+    document.querySelectorAll('.item-row-admin input').forEach(input => {
+      input.addEventListener('blur', async () => {
+        const itemId = input.dataset.itemId;
+        const row = input.closest('.item-row-admin');
+        const name = row.querySelector('[data-field="name"]').value;
+        const unit = row.querySelector('[data-field="unit"]').value;
+        const price = row.querySelector('[data-field="price"]').value;
+        const res = await fetch(`/api/admin/items/${itemId}`, {
+          method: 'PUT', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, unit, price })
+        });
+        if (res.ok) showStatus('Item updated', 'success');
+        else showStatus('Could not update item', 'error');
+      });
+    });
+
+    // Delete item
+    document.querySelectorAll('[data-delete-item]').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        if (!confirm('Delete this item?')) return;
+        await fetch(`/api/admin/items/${btn.dataset.deleteItem}`, { method: 'DELETE' });
+        showStatus('Item deleted', 'success');
+        await refreshCatalog();
+      });
+    });
+
+    // Add item
+    document.querySelectorAll('[data-add-item]').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        const catId = btn.dataset.addItem;
+        const name = document.querySelector(`[data-new-item-name="${catId}"]`).value;
+        const unit = document.querySelector(`[data-new-item-unit="${catId}"]`).value;
+        const price = document.querySelector(`[data-new-item-price="${catId}"]`).value;
+        if (!name || !price) { showStatus('Item name and price required', 'error'); return; }
+        const res = await fetch('/api/admin/items', {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ category_id: catId, name, unit, price })
+        });
+        if (res.ok) { showStatus('Item added', 'success'); await refreshCatalog(); }
+        else showStatus('Could not add item', 'error');
+      });
+    });
+  }
+
+  async function refreshCatalog() {
+    const res = await fetch('/api/catalog');
+    const data = await res.json();
+    CATALOG = data.catalog || [];
+    renderCategories();
+  }
+
+  document.getElementById('add-category-btn').addEventListener('click', async () => {
+    const input = document.getElementById('new-category-name');
+    if (!input.value.trim()) return;
+    const res = await fetch('/api/admin/categories', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name: input.value })
+    });
+    if (res.ok) {
+      input.value = '';
+      showStatus('Category added', 'success');
+      await refreshCatalog();
+    } else {
+      showStatus('Could not add category', 'error');
+    }
+  });
+
+  document.getElementById('save-shop-info').addEventListener('click', async () => {
+    const body = {
+      shop_name: document.getElementById('shop_name').value,
+      tagline: document.getElementById('tagline').value,
+      phone: document.getElementById('phone').value,
+      whatsapp: document.getElementById('whatsapp').value,
+      address: document.getElementById('address').value,
+    };
+    const res = await fetch('/api/admin/shop-info', {
+      method: 'PUT', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
+    });
+    if (res.ok) showStatus('Shop details saved', 'success');
+    else showStatus('Could not save shop details', 'error');
+  });
+
+  document.getElementById('logout-btn').addEventListener('click', async () => {
+    await fetch('/api/logout', { method: 'POST' });
+    window.location.href = '/admin-login.html';
+  });
+
+  document.getElementById('change-pw-btn').addEventListener('click', async () => {
+    const currentPassword = prompt('Current password:');
+    if (!currentPassword) return;
+    const newPassword = prompt('New password (min 6 characters):');
+    if (!newPassword) return;
+    const res = await fetch('/api/change-password', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ currentPassword, newPassword })
+    });
+    const data = await res.json();
+    if (res.ok) alert('Password changed successfully.');
+    else alert('Error: ' + data.error);
+  });
+
+  (async () => {
+    const ok = await checkAuth();
+    if (ok) loadData();
+  })();
+</script>
+</body>
+</html>
