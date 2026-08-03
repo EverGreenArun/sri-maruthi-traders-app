@@ -59,7 +59,15 @@
   .list-controls button:hover { text-decoration: underline; }
 
   .subcategory { margin: 6px 0 18px 16px; }
-  .subcategory-head { font-family: 'Barlow Condensed', sans-serif; font-size: 17px; font-weight: 700; color: var(--slate); margin: 0 0 4px; }
+  .subcategory-head {
+    display: flex; align-items: center; gap: 10px; font-family: 'Barlow Condensed', sans-serif; font-size: 17px;
+    font-weight: 700; color: var(--slate); margin: 0 0 4px; cursor: pointer; user-select: none;
+    padding: 4px 0;
+  }
+  .sub-chevron { width: 8px; height: 8px; border-right: 2px solid var(--slate); border-bottom: 2px solid var(--slate); transform: rotate(45deg); transition: transform 0.18s ease; flex-shrink: 0; }
+  .subcategory.collapsed .sub-chevron { transform: rotate(-45deg); }
+  .subcategory-body { overflow: hidden; max-height: 3000px; transition: max-height 0.25s ease; }
+  .subcategory.collapsed .subcategory-body { max-height: 0; }
 
   .item-list { display: flex; flex-direction: column; }
   .item-row { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 14px 16px; border-bottom: 1px solid var(--line); transition: background 0.12s ease; }
@@ -139,6 +147,7 @@
 <script>
   let CATALOG = [];
   const collapsedState = new Set();
+  const collapsedSubState = new Set();
 
   function formatPrice(n) { return n.toLocaleString('en-IN'); }
 
@@ -199,10 +208,33 @@
       }
 
       filteredSubs.forEach(sub => {
+        const subKey = cat.name + '::' + sub.name;
+        const subCollapsed = !searching && collapsedSubState.has(subKey);
+
         const subSection = document.createElement('div');
-        subSection.className = 'subcategory';
-        subSection.innerHTML = `<div class="subcategory-head">${sub.name}</div>`;
-        subSection.appendChild(buildItemList(sub.items));
+        subSection.className = 'subcategory' + (subCollapsed ? ' collapsed' : '');
+        subSection.innerHTML = `
+          <div class="subcategory-head">
+            <span>${sub.name}</span>
+            <span class="sub-chevron"></span>
+          </div>
+        `;
+
+        const subBody = document.createElement('div');
+        subBody.className = 'subcategory-body';
+        subBody.appendChild(buildItemList(sub.items));
+        subSection.appendChild(subBody);
+
+        subSection.querySelector('.subcategory-head').addEventListener('click', (e) => {
+          e.stopPropagation();
+          if (collapsedSubState.has(subKey)) {
+            collapsedSubState.delete(subKey);
+          } else {
+            collapsedSubState.add(subKey);
+          }
+          renderCatalog(document.getElementById('search').value);
+        });
+
         body.appendChild(subSection);
       });
 
@@ -264,10 +296,14 @@
 
   document.getElementById('expand-all').addEventListener('click', () => {
     collapsedState.clear();
+    collapsedSubState.clear();
     renderCatalog(document.getElementById('search').value);
   });
   document.getElementById('collapse-all').addEventListener('click', () => {
-    CATALOG.forEach(cat => collapsedState.add(cat.name));
+    CATALOG.forEach(cat => {
+      collapsedState.add(cat.name);
+      (cat.subcategories || []).forEach(sub => collapsedSubState.add(cat.name + '::' + sub.name));
+    });
     renderCatalog(document.getElementById('search').value);
   });
 
