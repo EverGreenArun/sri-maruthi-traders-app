@@ -4,41 +4,41 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Admin — Sri Maruthi Traders</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Barlow+Condensed:wght@700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Barlow+Condensed:wght@700&family=Noto+Sans+Tamil:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root { --ink:#1E2128; --paper:#F7F5F0; --copper:#C97A3D; --slate:#4A5560; --amber:#E8A33D; --line:#E2DED4; --danger:#C0392B; }
   * { box-sizing: border-box; }
-  body { margin: 0; background: var(--paper); color: var(--ink); font-family: 'Inter', sans-serif; }
+  body { margin: 0; background: var(--paper); color: var(--ink); font-family: 'Inter', 'Noto Sans Tamil', sans-serif; }
 
   .topbar {
     background: var(--ink); color: #fff; padding: 18px 24px; display: flex;
     justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;
   }
-  .topbar h1 { font-family: 'Barlow Condensed', sans-serif; font-size: 22px; margin: 0; }
+  .topbar h1 { font-family: 'Barlow Condensed', 'Noto Sans Tamil', sans-serif; font-size: 22px; margin: 0; }
   .topbar .actions { display: flex; gap: 10px; align-items: center; }
   .topbar a, .topbar button {
     font-size: 13px; color: #fff; background: rgba(255,255,255,0.12); border: none;
-    padding: 8px 14px; border-radius: 6px; cursor: pointer; text-decoration: none; font-family: 'Inter', sans-serif;
+    padding: 8px 14px; border-radius: 6px; cursor: pointer; text-decoration: none; font-family: 'Inter', 'Noto Sans Tamil', sans-serif;
   }
   .topbar a:hover, .topbar button:hover { background: rgba(255,255,255,0.2); }
 
   main { max-width: 860px; margin: 0 auto; padding: 32px 24px 80px; }
 
   .panel { background: #fff; border: 1px solid var(--line); border-radius: 10px; padding: 24px; margin-bottom: 24px; }
-  .panel h2 { font-family: 'Barlow Condensed', sans-serif; font-size: 20px; margin: 0 0 16px; }
+  .panel h2 { font-family: 'Barlow Condensed', 'Noto Sans Tamil', sans-serif; font-size: 20px; margin: 0 0 16px; }
 
   .field-row { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 12px; }
   .field { flex: 1; min-width: 140px; }
   .field label { display: block; font-size: 12px; font-weight: 600; color: var(--slate); margin-bottom: 4px; }
   .field input {
     width: 100%; padding: 10px 12px; border: 1.5px solid var(--line); border-radius: 6px;
-    font-size: 14px; font-family: 'Inter', sans-serif; outline: none;
+    font-size: 14px; font-family: 'Inter', 'Noto Sans Tamil', sans-serif; outline: none;
   }
   .field input:focus { border-color: var(--copper); }
 
   .btn {
     padding: 10px 16px; border: none; border-radius: 6px; font-size: 14px; font-weight: 600;
-    cursor: pointer; font-family: 'Inter', sans-serif;
+    cursor: pointer; font-family: 'Inter', 'Noto Sans Tamil', sans-serif;
   }
   .btn-primary { background: var(--copper); color: #fff; }
   .btn-primary:hover { background: #b8692f; }
@@ -54,7 +54,7 @@
     background: var(--paper); border-bottom: 1px solid var(--line);
   }
   .category-block-head input {
-    font-family: 'Barlow Condensed', sans-serif; font-size: 18px; font-weight: 700; border: none;
+    font-family: 'Barlow Condensed', 'Noto Sans Tamil', sans-serif; font-size: 18px; font-weight: 700; border: none;
     background: transparent; outline: none; padding: 4px; border-radius: 4px; width: 60%;
   }
   .category-block-head input:focus { background: #fff; box-shadow: 0 0 0 1.5px var(--copper); }
@@ -64,7 +64,7 @@
     padding: 10px 16px; border-bottom: 1px solid #F0EDE4;
   }
   .item-row-admin input {
-    padding: 8px 10px; border: 1.5px solid var(--line); border-radius: 6px; font-size: 13px; font-family: 'Inter', sans-serif; outline: none;
+    padding: 8px 10px; border: 1.5px solid var(--line); border-radius: 6px; font-size: 13px; font-family: 'Inter', 'Noto Sans Tamil', sans-serif; outline: none;
   }
   .item-row-admin input:focus { border-color: var(--copper); }
   .add-item-row { padding: 12px 16px; }
@@ -75,12 +75,12 @@
     background: #FBFAF6; border-bottom: 1px solid #F0EDE4;
   }
   .subcategory-head input {
-    font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 600; border: none;
+    font-family: 'Inter', 'Noto Sans Tamil', sans-serif; font-size: 14px; font-weight: 600; border: none;
     background: transparent; outline: none; padding: 4px; border-radius: 4px; width: 60%;
   }
   .subcategory-head input:focus { background: #fff; box-shadow: 0 0 0 1.5px var(--copper); }
   .add-subcategory-row { padding: 10px 16px; display: flex; gap: 8px; }
-  .add-subcategory-row input { flex: 1; padding: 8px 10px; border: 1.5px solid var(--line); border-radius: 6px; font-size: 13px; font-family: 'Inter', sans-serif; outline: none; }
+  .add-subcategory-row input { flex: 1; padding: 8px 10px; border: 1.5px solid var(--line); border-radius: 6px; font-size: 13px; font-family: 'Inter', 'Noto Sans Tamil', sans-serif; outline: none; }
   .field-hint { font-size: 11px; color: var(--slate); margin: -8px 0 12px 2px; }
 
   .status-msg {
