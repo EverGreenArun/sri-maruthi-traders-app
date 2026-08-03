@@ -37,10 +37,26 @@
   #search::placeholder { color: #9BA3AC; }
 
   .category { margin-bottom: 40px; }
-  .category-head { display: flex; align-items: baseline; gap: 12px; margin-bottom: 4px; padding-left: 16px; border-left: 3px solid var(--copper); }
+  .category-head {
+    display: flex; align-items: baseline; gap: 12px; margin-bottom: 4px; padding: 6px 16px 6px 16px;
+    border-left: 3px solid var(--copper); cursor: pointer; user-select: none; border-radius: 4px;
+    transition: background 0.12s ease;
+  }
+  .category-head:hover { background: rgba(201, 122, 61, 0.06); }
   .category-head h2 { font-family: 'Barlow Condensed', sans-serif; font-size: 24px; font-weight: 700; margin: 0; letter-spacing: 0.01em; }
   .category-count { font-size: 13px; color: var(--slate); }
+  .chevron { margin-left: auto; width: 10px; height: 10px; border-right: 2px solid var(--copper); border-bottom: 2px solid var(--copper); transform: rotate(45deg); transition: transform 0.18s ease; flex-shrink: 0; }
+  .category.collapsed .chevron { transform: rotate(-45deg); }
+  .category-body { overflow: hidden; max-height: 4000px; transition: max-height 0.25s ease; }
+  .category.collapsed .category-body { max-height: 0; }
   .wire-divider { height: 14px; margin: 4px 0 14px 16px; background-image: linear-gradient(to bottom, transparent 45%, var(--line) 45%, var(--line) 55%, transparent 55%); }
+
+  .list-controls { display: flex; justify-content: flex-end; gap: 16px; margin: -20px 0 24px; }
+  .list-controls button {
+    background: none; border: none; font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 600;
+    color: var(--copper); cursor: pointer; padding: 4px 0;
+  }
+  .list-controls button:hover { text-decoration: underline; }
 
   .subcategory { margin: 6px 0 18px 16px; }
   .subcategory-head { font-family: 'Barlow Condensed', sans-serif; font-size: 17px; font-weight: 700; color: var(--slate); margin: 0 0 4px; }
@@ -93,6 +109,10 @@
     <input type="text" id="search" placeholder="Search for an item…">
   </div>
   <div class="loading" id="loading">Loading price list…</div>
+  <div class="list-controls" id="list-controls" style="display:none;">
+    <button type="button" id="expand-all">Expand all</button>
+    <button type="button" id="collapse-all">Collapse all</button>
+  </div>
   <div id="catalog"></div>
   <div class="no-results" id="no-results">No items match your search.</div>
 </main>
@@ -118,6 +138,7 @@
 
 <script>
   let CATALOG = [];
+  const collapsedState = new Set();
 
   function formatPrice(n) { return n.toLocaleString('en-IN'); }
 
@@ -127,6 +148,7 @@
     catalogEl.innerHTML = '';
     let anyVisible = false;
     const q = (filterText || '').trim().toLowerCase();
+    const searching = q.length > 0;
 
     function buildItemList(items) {
       const list = document.createElement('div');
@@ -156,18 +178,24 @@
       if (totalCount === 0) return;
       anyVisible = true;
 
+      const isCollapsed = !searching && collapsedState.has(cat.name);
+
       const section = document.createElement('div');
-      section.className = 'category';
+      section.className = 'category' + (isCollapsed ? ' collapsed' : '');
       section.innerHTML = `
         <div class="category-head">
           <h2>${cat.name}</h2>
           <span class="category-count">${totalCount} item${totalCount !== 1 ? 's' : ''}</span>
+          <span class="chevron"></span>
         </div>
-        <div class="wire-divider"></div>
       `;
 
+      const body = document.createElement('div');
+      body.className = 'category-body';
+      body.innerHTML = `<div class="wire-divider"></div>`;
+
       if (filteredItems.length > 0) {
-        section.appendChild(buildItemList(filteredItems));
+        body.appendChild(buildItemList(filteredItems));
       }
 
       filteredSubs.forEach(sub => {
@@ -175,13 +203,25 @@
         subSection.className = 'subcategory';
         subSection.innerHTML = `<div class="subcategory-head">${sub.name}</div>`;
         subSection.appendChild(buildItemList(sub.items));
-        section.appendChild(subSection);
+        body.appendChild(subSection);
+      });
+
+      section.appendChild(body);
+
+      section.querySelector('.category-head').addEventListener('click', () => {
+        if (collapsedState.has(cat.name)) {
+          collapsedState.delete(cat.name);
+        } else {
+          collapsedState.add(cat.name);
+        }
+        renderCatalog(document.getElementById('search').value);
       });
 
       catalogEl.appendChild(section);
     });
 
     noResults.style.display = anyVisible ? 'none' : 'block';
+    document.getElementById('list-controls').style.display = anyVisible ? 'flex' : 'none';
   }
 
   async function loadCatalog() {
@@ -221,6 +261,16 @@
   }
 
   document.getElementById('search').addEventListener('input', (e) => renderCatalog(e.target.value));
+
+  document.getElementById('expand-all').addEventListener('click', () => {
+    collapsedState.clear();
+    renderCatalog(document.getElementById('search').value);
+  });
+  document.getElementById('collapse-all').addEventListener('click', () => {
+    CATALOG.forEach(cat => collapsedState.add(cat.name));
+    renderCatalog(document.getElementById('search').value);
+  });
+
   loadCatalog();
 </script>
 
