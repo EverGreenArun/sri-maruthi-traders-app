@@ -6,14 +6,14 @@
 <title>Sri Maruthi Traders — Price List</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Barlow+Condensed:wght@600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Barlow+Condensed:wght@600;700&family=Noto+Sans+Tamil:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
     --ink: #1E2128; --paper: #F7F5F0; --copper: #C97A3D;
     --slate: #4A5560; --amber: #E8A33D; --line: #E2DED4;
   }
   * { box-sizing: border-box; }
-  body { margin: 0; background: var(--paper); color: var(--ink); font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; }
+  body { margin: 0; background: var(--paper); color: var(--ink); font-family: 'Inter', 'Noto Sans Tamil', sans-serif; -webkit-font-smoothing: antialiased; }
 
   header { background: var(--ink); color: var(--paper); padding: 48px 24px 40px; position: relative; overflow: hidden; }
   header::after {
@@ -22,14 +22,14 @@
   }
   .header-inner { max-width: 780px; margin: 0 auto; }
   .eyebrow { font-size: 13px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--amber); font-weight: 600; margin-bottom: 8px; }
-  h1 { font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: clamp(36px, 7vw, 56px); letter-spacing: -0.01em; margin: 0 0 8px; line-height: 1; }
+  h1 { font-family: 'Barlow Condensed', 'Noto Sans Tamil', sans-serif; font-weight: 700; font-size: clamp(36px, 7vw, 56px); letter-spacing: -0.01em; margin: 0 0 8px; line-height: 1; }
   .subtitle { color: #B8BEC7; font-size: 15px; max-width: 480px; line-height: 1.5; }
   .updated { margin-top: 20px; font-size: 13px; color: var(--copper); font-weight: 500; }
 
   main { max-width: 780px; margin: 0 auto; padding: 40px 24px 20px; }
   .search-row { margin-bottom: 32px; }
   #search {
-    width: 100%; padding: 14px 16px; font-family: 'Inter', sans-serif; font-size: 15px;
+    width: 100%; padding: 14px 16px; font-family: 'Inter', 'Noto Sans Tamil', sans-serif; font-size: 15px;
     border: 1.5px solid var(--line); border-radius: 8px; background: #fff; color: var(--ink);
     outline: none; transition: border-color 0.15s ease;
   }
@@ -43,7 +43,7 @@
     transition: background 0.12s ease;
   }
   .category-head:hover { background: rgba(201, 122, 61, 0.06); }
-  .category-head h2 { font-family: 'Barlow Condensed', sans-serif; font-size: 24px; font-weight: 700; margin: 0; letter-spacing: 0.01em; }
+  .category-head h2 { font-family: 'Barlow Condensed', 'Noto Sans Tamil', sans-serif; font-size: 24px; font-weight: 700; margin: 0; letter-spacing: 0.01em; }
   .category-count { font-size: 13px; color: var(--slate); }
   .chevron { margin-left: auto; width: 10px; height: 10px; border-right: 2px solid var(--copper); border-bottom: 2px solid var(--copper); transform: rotate(45deg); transition: transform 0.18s ease; flex-shrink: 0; }
   .category.collapsed .chevron { transform: rotate(-45deg); }
@@ -53,14 +53,14 @@
 
   .list-controls { display: flex; justify-content: flex-end; gap: 16px; margin: -20px 0 24px; }
   .list-controls button {
-    background: none; border: none; font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 600;
+    background: none; border: none; font-family: 'Inter', 'Noto Sans Tamil', sans-serif; font-size: 13px; font-weight: 600;
     color: var(--copper); cursor: pointer; padding: 4px 0;
   }
   .list-controls button:hover { text-decoration: underline; }
 
   .subcategory { margin: 6px 0 18px 16px; }
   .subcategory-head {
-    display: flex; align-items: center; gap: 10px; font-family: 'Barlow Condensed', sans-serif; font-size: 17px;
+    display: flex; align-items: center; gap: 10px; font-family: 'Barlow Condensed', 'Noto Sans Tamil', sans-serif; font-size: 17px;
     font-weight: 700; color: var(--slate); margin: 0 0 4px; cursor: pointer; user-select: none;
     padding: 4px 0;
   }
@@ -74,7 +74,7 @@
   .item-row:hover { background: rgba(201, 122, 61, 0.06); }
   .item-name { font-size: 15px; font-weight: 600; color: var(--ink); }
   .item-unit { font-size: 13px; color: var(--slate); margin-top: 2px; }
-  .item-price { font-family: 'Barlow Condensed', sans-serif; font-size: 20px; font-weight: 700; color: var(--ink); white-space: nowrap; flex-shrink: 0; }
+  .item-price { font-family: 'Barlow Condensed', 'Noto Sans Tamil', sans-serif; font-size: 20px; font-weight: 700; color: var(--ink); white-space: nowrap; flex-shrink: 0; }
   .item-price .rupee { color: var(--copper); font-size: 16px; margin-right: 2px; }
 
   .no-results, .loading { text-align: center; color: var(--slate); padding: 40px 0; font-size: 14px; }
