@@ -6,139 +6,110 @@
 <title>Sri Maruthi Traders — Price List</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Baloo+2:wght@600;700;800&family=Noto+Sans+Tamil:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@600;700&family=Noto+Sans+Tamil:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
-    --cream: #FFF8EC; --ink: #2B2250; --paper: #FFFFFF;
-    --pink: #FF5D8F; --yellow: #FFC93C; --teal: #2EC4B6; --violet: #8C5CF6; --orange: #FF7A45;
-    --muted: #7A7396;
+    --bg: #F5F6F8; --paper: #FFFFFF; --ink: #1B2330; --muted: #6B7280;
+    --accent: #2E5FE8; --accent-soft: #EAF0FE; --line: #E6E8EC;
   }
   * { box-sizing: border-box; }
   body {
-    margin: 0; background: var(--cream); color: var(--ink);
-    font-family: 'Poppins', 'Noto Sans Tamil', sans-serif; -webkit-font-smoothing: antialiased;
-    background-image: radial-gradient(var(--violet) 1.5px, transparent 1.5px);
-    background-size: 26px 26px; background-position: -6px -6px;
+    margin: 0; background: var(--bg); color: var(--ink);
+    font-family: 'Inter', 'Noto Sans Tamil', sans-serif; -webkit-font-smoothing: antialiased;
   }
 
-  header {
-    background: linear-gradient(115deg, var(--pink), var(--orange) 45%, var(--yellow) 100%);
-    color: var(--ink); padding: 44px 24px 34px; position: relative; overflow: hidden;
-    border-bottom: 4px solid var(--ink);
-  }
-  .header-inner { max-width: 780px; margin: 0 auto; position: relative; z-index: 1; }
+  header { background: var(--paper); padding: 40px 24px 30px; border-bottom: 1px solid var(--line); }
+  .header-inner { max-width: 900px; margin: 0 auto; }
   .eyebrow {
-    font-family: 'Baloo 2', 'Noto Sans Tamil', sans-serif; font-size: 14px; letter-spacing: 0.02em; text-transform: uppercase;
-    color: var(--ink); font-weight: 700; margin-bottom: 10px; display: flex; align-items: center; gap: 6px;
+    font-size: 12.5px; letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--accent); font-weight: 600; margin-bottom: 10px; display: flex; align-items: center; gap: 6px;
   }
-  .eyebrow::before { content: "⚡"; font-size: 15px; }
   h1 {
-    font-family: 'Baloo 2', 'Noto Sans Tamil', sans-serif; font-weight: 800; font-size: clamp(36px, 8vw, 56px);
-    letter-spacing: -0.01em; margin: 0 0 10px; line-height: 1.02; color: var(--paper);
-    text-shadow: 3px 3px 0 var(--ink);
+    font-family: 'Sora', 'Noto Sans Tamil', sans-serif; font-weight: 700; font-size: clamp(30px, 6vw, 42px);
+    letter-spacing: -0.015em; margin: 0 0 10px; line-height: 1.08; color: var(--ink);
   }
-  .subtitle { color: var(--ink); font-weight: 500; font-size: 15px; max-width: 480px; line-height: 1.55; opacity: 0.85; }
+  .subtitle { color: var(--muted); font-size: 14.5px; max-width: 500px; line-height: 1.55; }
   .updated {
-    margin-top: 20px; font-family: 'Poppins', sans-serif; font-size: 13px; color: var(--ink); font-weight: 600;
-    display: inline-flex; align-items: center; gap: 7px; background: var(--paper); padding: 6px 14px;
-    border-radius: 999px; border: 2px solid var(--ink);
+    margin-top: 18px; font-size: 12.5px; color: var(--muted); font-weight: 500;
+    display: inline-flex; align-items: center; gap: 7px;
   }
-  .updated::before { content: "🔌"; font-size: 13px; }
+  .updated::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); flex-shrink: 0; }
 
-  main { max-width: 780px; margin: 0 auto; padding: 40px 24px 20px; }
-  .search-row { margin-bottom: 32px; }
+  main { max-width: 900px; margin: 0 auto; padding: 32px 24px 20px; }
+  .search-row { margin-bottom: 28px; }
   #search {
-    width: 100%; padding: 15px 18px; font-family: 'Poppins', 'Noto Sans Tamil', sans-serif; font-size: 15px; font-weight: 500;
-    border: 2.5px solid var(--ink); border-radius: 14px; background: var(--paper); color: var(--ink);
-    outline: none; transition: transform 0.12s ease, box-shadow 0.12s ease; box-shadow: 4px 4px 0 var(--ink);
+    width: 100%; padding: 12px 16px; font-family: 'Inter', 'Noto Sans Tamil', sans-serif; font-size: 14.5px;
+    border: 1.5px solid var(--line); border-radius: 10px; background: var(--paper); color: var(--ink);
+    outline: none; transition: border-color 0.15s ease, box-shadow 0.15s ease;
   }
-  #search:focus { transform: translate(-2px, -2px); box-shadow: 6px 6px 0 var(--violet); }
+  #search:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
   #search::placeholder { color: var(--muted); }
 
   .category { margin-bottom: 30px; }
-  .category:nth-of-type(5n+1) { --accent: var(--pink); }
-  .category:nth-of-type(5n+2) { --accent: var(--teal); }
-  .category:nth-of-type(5n+3) { --accent: var(--yellow); }
-  .category:nth-of-type(5n+4) { --accent: var(--violet); }
-  .category:nth-of-type(5n+5) { --accent: var(--orange); }
   .category-head {
-    display: flex; align-items: center; gap: 12px; margin-bottom: 10px; padding: 12px 18px;
-    cursor: pointer; user-select: none; border-radius: 14px; position: relative;
-    background: var(--accent); border: 2.5px solid var(--ink); box-shadow: 4px 4px 0 var(--ink);
-    transition: transform 0.12s ease, box-shadow 0.12s ease;
+    display: flex; align-items: center; gap: 12px; margin-bottom: 12px; padding: 4px 0 4px 14px;
+    cursor: pointer; user-select: none; border-left: 3px solid var(--accent); border-radius: 2px;
+    transition: opacity 0.12s ease;
   }
-  .category-head:hover { transform: translate(-2px, -2px); box-shadow: 6px 6px 0 var(--ink); }
-  .category-head h2 { font-family: 'Baloo 2', 'Noto Sans Tamil', sans-serif; font-size: 21px; font-weight: 700; margin: 0; color: var(--ink); }
-  .category-count {
-    font-size: 12px; font-weight: 700; color: var(--ink); background: rgba(255,255,255,0.55);
-    padding: 3px 10px; border-radius: 999px;
-  }
-  .chevron { margin-left: auto; width: 9px; height: 9px; border-right: 3px solid var(--ink); border-bottom: 3px solid var(--ink); transform: rotate(45deg); transition: transform 0.18s ease; flex-shrink: 0; border-radius: 1px; }
+  .category-head:hover { opacity: 0.7; }
+  .category-head h2 { font-family: 'Sora', 'Noto Sans Tamil', sans-serif; font-size: 18px; font-weight: 600; margin: 0; color: var(--ink); }
+  .category-count { font-size: 12px; font-weight: 500; color: var(--muted); }
+  .chevron { margin-left: auto; width: 8px; height: 8px; border-right: 2px solid var(--muted); border-bottom: 2px solid var(--muted); transform: rotate(45deg); transition: transform 0.18s ease; flex-shrink: 0; }
   .category.collapsed .chevron { transform: rotate(-45deg); }
-  .category-body { overflow: hidden; max-height: 4000px; transition: max-height 0.25s ease; }
+  .category-body { overflow: hidden; max-height: 6000px; transition: max-height 0.25s ease; }
   .category.collapsed .category-body { max-height: 0; }
-  .wire-divider {
-    height: 5px; margin: 2px 4px 14px; border-radius: 4px;
-    background: repeating-linear-gradient(90deg, var(--pink) 0 8px, var(--yellow) 8px 16px, var(--teal) 16px 24px, var(--violet) 24px 32px, var(--orange) 32px 40px);
-  }
+  .wire-divider { display: none; }
 
-  .list-controls { display: flex; justify-content: flex-end; gap: 14px; margin: -20px 0 24px; }
+  .list-controls { display: flex; justify-content: flex-end; gap: 16px; margin: -18px 0 24px; }
   .list-controls button {
-    background: var(--paper); border: 2px solid var(--ink); border-radius: 999px; font-family: 'Poppins', sans-serif; font-size: 12px; font-weight: 700;
-    letter-spacing: 0.02em; text-transform: uppercase; color: var(--ink); cursor: pointer; padding: 6px 14px;
-    box-shadow: 2px 2px 0 var(--ink); transition: transform 0.1s ease;
+    background: none; border: none; font-family: 'Inter', sans-serif; font-size: 12.5px; font-weight: 600;
+    color: var(--accent); cursor: pointer; padding: 4px 0;
   }
-  .list-controls button:hover { transform: translate(-1px, -1px); background: var(--yellow); }
+  .list-controls button:hover { text-decoration: underline; }
 
-  .subcategory { margin: 4px 4px 18px; }
+  .subcategory { margin: 4px 0 20px; }
   .subcategory-head {
-    display: flex; align-items: center; gap: 8px; font-family: 'Baloo 2', 'Noto Sans Tamil', sans-serif; font-size: 16px;
-    font-weight: 700; color: var(--ink); margin: 0 0 6px; cursor: pointer; user-select: none;
-    padding: 4px 0;
+    display: flex; align-items: center; gap: 8px; font-family: 'Inter', 'Noto Sans Tamil', sans-serif; font-size: 13.5px;
+    font-weight: 600; color: var(--muted); margin: 0 0 8px; cursor: pointer; user-select: none;
+    text-transform: uppercase; letter-spacing: 0.04em;
   }
-  .subcategory-head span:first-child::before { content: "✨ "; font-size: 13px; }
-  .sub-chevron { width: 7px; height: 7px; border-right: 2px solid var(--ink); border-bottom: 2px solid var(--ink); transform: rotate(45deg); transition: transform 0.18s ease; flex-shrink: 0; }
+  .sub-chevron { width: 7px; height: 7px; border-right: 2px solid var(--muted); border-bottom: 2px solid var(--muted); transform: rotate(45deg); transition: transform 0.18s ease; flex-shrink: 0; }
   .subcategory.collapsed .sub-chevron { transform: rotate(-45deg); }
-  .subcategory-body { overflow: hidden; max-height: 3000px; transition: max-height 0.25s ease; }
+  .subcategory-body { overflow: hidden; max-height: 4000px; transition: max-height 0.25s ease; }
   .subcategory.collapsed .subcategory-body { max-height: 0; }
 
-  .item-list { display: flex; flex-direction: column; gap: 8px; }
+  .item-list { display: flex; flex-wrap: wrap; gap: 10px; }
   .item-row {
-    display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 12px 16px;
-    background: var(--paper); border: 2px solid var(--ink); border-radius: 12px; transition: transform 0.12s ease, box-shadow 0.12s ease;
+    flex: 1 1 190px; min-width: 160px; display: flex; flex-direction: column; justify-content: space-between; gap: 10px; padding: 14px;
+    background: var(--paper); border: 1px solid var(--line); border-radius: 10px; transition: border-color 0.12s ease, box-shadow 0.12s ease;
   }
-  .item-row:hover { transform: translate(-2px, -2px); box-shadow: 3px 3px 0 var(--accent, var(--violet)); }
-  .item-name { font-size: 14.5px; font-weight: 600; color: var(--ink); }
-  .item-unit { font-size: 12px; color: var(--muted); margin-top: 2px; font-weight: 500; }
-  .item-price {
-    font-family: 'Baloo 2', 'Noto Sans Tamil', sans-serif; font-size: 18px; font-weight: 700; color: var(--ink);
-    white-space: nowrap; flex-shrink: 0; background: var(--yellow); padding: 5px 12px; border-radius: 999px;
-    border: 2px solid var(--ink); transform: rotate(-2deg);
-  }
-  .item-price .rupee { color: var(--ink); font-size: 14px; margin-right: 1px; }
+  .item-row:hover { border-color: var(--accent); box-shadow: 0 2px 10px rgba(46,95,232,0.08); }
+  .item-name { font-size: 13.5px; font-weight: 600; color: var(--ink); line-height: 1.35; }
+  .item-unit { font-size: 11.5px; color: var(--muted); margin-top: 3px; font-weight: 400; }
+  .item-price { font-size: 17px; font-weight: 700; color: var(--accent); white-space: nowrap; }
+  .item-price .rupee { color: var(--accent); font-size: 13px; margin-right: 1px; font-weight: 600; }
 
-  .no-results, .loading { text-align: center; color: var(--muted); padding: 40px 0; font-size: 14px; font-weight: 600; }
+  .no-results, .loading { text-align: center; color: var(--muted); padding: 40px 0; font-size: 14px; }
   .no-results { display: none; }
 
   /* Contact card */
   .contact-card {
-    max-width: 780px; margin: 20px auto 0; padding: 24px; background: var(--teal);
-    border: 2.5px solid var(--ink); border-radius: 16px; display: flex; flex-wrap: wrap; gap: 20px;
-    box-shadow: 5px 5px 0 var(--ink);
+    max-width: 900px; margin: 24px auto 0; padding: 22px; background: var(--paper);
+    border: 1px solid var(--line); border-radius: 12px; display: flex; flex-wrap: wrap; gap: 20px;
   }
   .contact-item { flex: 1; min-width: 180px; }
-  .contact-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink); font-weight: 700; margin-bottom: 5px; opacity: 0.75; }
-  .contact-value { font-size: 15px; font-weight: 700; color: var(--ink); }
-  .contact-value a { color: var(--ink); text-decoration: none; border-bottom: 2px solid var(--ink); }
-  .contact-value a:hover { opacity: 0.7; }
+  .contact-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); font-weight: 600; margin-bottom: 5px; }
+  .contact-value { font-size: 14.5px; font-weight: 600; color: var(--ink); }
+  .contact-value a { color: var(--accent); text-decoration: none; }
+  .contact-value a:hover { text-decoration: underline; }
 
-  footer { text-align: center; padding: 32px 24px 48px; color: var(--muted); font-size: 13px; font-weight: 500; }
+  footer { text-align: center; padding: 32px 24px 48px; color: var(--muted); font-size: 13px; }
   footer strong { color: var(--ink); }
   footer a { color: var(--muted); }
 
   @media (max-width: 480px) {
-    .item-price { font-size: 16px; }
-    header { padding: 36px 20px 30px; }
+    .item-row { flex-basis: 140px; }
+    header { padding: 32px 20px 26px; }
   }
 </style>
 </head>
