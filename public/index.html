@@ -300,6 +300,10 @@
       </button>
       <div class="party-form" id="partyForm" hidden>
         <div class="field">
+          <label for="pd-estimate">Estimate Number</label>
+          <input type="text" id="pd-estimate" placeholder="e.g. EST-001">
+        </div>
+        <div class="field">
           <label for="pd-name">Party Name</label>
           <input type="text" id="pd-name" placeholder="Your name / shop name">
         </div>
@@ -435,13 +439,14 @@
     renderCatalog(document.getElementById('search').value);
   }
   function clearPartyDetails() {
-    ['pd-name', 'pd-address', 'pd-phone', 'pd-cell', 'pd-transport', 'pd-from', 'pd-to'].forEach(id => {
+    ['pd-estimate', 'pd-name', 'pd-address', 'pd-phone', 'pd-cell', 'pd-transport', 'pd-from', 'pd-to'].forEach(id => {
       const el = document.getElementById(id);
       if (el) el.value = '';
     });
   }
   function getPartyDetails() {
     return {
+      estimate: document.getElementById('pd-estimate').value.trim(),
       name: document.getElementById('pd-name').value.trim(),
       address: document.getElementById('pd-address').value.trim(),
       phone: document.getElementById('pd-phone').value.trim(),
@@ -873,7 +878,7 @@
     doc.setFontSize(9.5);
     y += 16;
     const partyLines = [
-      ['Party Name', party.name || '-'],
+      ['Estimate No.', party.estimate || '-', 'Party Name', party.name || '-'],
       ['Address', party.address || '-'],
       ['Ph.', party.phone || '-', 'Cell', party.cell || '-'],
       ['Transport Name', party.transport || '-'],
