@@ -20,6 +20,22 @@
 
   header { background: var(--paper); padding: 40px 24px 30px; border-bottom: 1px solid var(--line); }
   .header-inner { max-width: 900px; margin: 0 auto; }
+  .header-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+  .header-title { flex: 1; min-width: 220px; }
+  .header-actions { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+  .icon-btn {
+    display: flex; align-items: center; gap: 7px; background: var(--accent-soft); border: 1px solid var(--line);
+    color: var(--accent); padding: 9px 14px; border-radius: 999px; font-weight: 600; font-size: 13px;
+    text-decoration: none; cursor: pointer; transition: background 0.15s ease, transform 0.15s ease;
+    font-family: 'Inter', 'Noto Sans Tamil', sans-serif;
+  }
+  .icon-btn:hover { background: #DDE7FD; transform: translateY(-1px); }
+  .cart-btn { background: var(--accent); color: #fff; border-color: var(--accent); position: relative; }
+  .cart-btn:hover { background: #1E4FD0; }
+  .cart-count {
+    background: #fff; color: var(--accent); font-weight: 700; font-size: 11.5px; min-width: 18px; height: 18px;
+    border-radius: 999px; display: inline-flex; align-items: center; justify-content: center; padding: 0 5px;
+  }
   .eyebrow {
     font-size: 12.5px; letter-spacing: 0.08em; text-transform: uppercase;
     color: var(--accent); font-weight: 600; margin-bottom: 10px; display: flex; align-items: center; gap: 6px;
@@ -89,6 +105,26 @@
   .item-price { font-size: 17px; font-weight: 700; color: var(--accent); white-space: nowrap; }
   .item-price .rupee { color: var(--accent); font-size: 13px; margin-right: 1px; font-weight: 600; }
 
+  .item-controls { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+  .qty-stepper { display: flex; align-items: center; border: 1.5px solid var(--line); border-radius: 999px; overflow: hidden; flex-shrink: 0; }
+  .qty-stepper button {
+    background: var(--bg); border: none; width: 24px; height: 24px; font-weight: 700; color: var(--accent);
+    font-size: 14px; line-height: 1; cursor: pointer; font-family: inherit;
+  }
+  .qty-stepper button:hover { background: var(--accent-soft); }
+  .qty-stepper input {
+    width: 28px; border: none; text-align: center; font-weight: 700; background: transparent; color: var(--ink);
+    font-family: inherit; font-size: 12.5px;
+  }
+  .qty-stepper input:focus { outline: none; }
+  .add-btn {
+    background: var(--accent); color: #fff; border: none; border-radius: 999px; padding: 6px 13px;
+    font-weight: 700; font-size: 12px; white-space: nowrap; cursor: pointer; font-family: inherit;
+    transition: background 0.15s ease, transform 0.15s ease;
+  }
+  .add-btn:hover { background: #1E4FD0; transform: translateY(-1px); }
+  .add-btn.added { background: #1E9E62; }
+
   .no-results, .loading { text-align: center; color: var(--muted); padding: 40px 0; font-size: 14px; }
   .no-results { display: none; }
 
@@ -111,16 +147,100 @@
     .item-row { flex-basis: 140px; }
     header { padding: 32px 20px 26px; }
   }
+
+  /* ================= CART DRAWER ================= */
+  .cart-overlay {
+    position: fixed; inset: 0; background: rgba(27,35,48,0.45); opacity: 0; pointer-events: none;
+    transition: opacity 0.2s ease; z-index: 60;
+  }
+  .cart-overlay.open { opacity: 1; pointer-events: auto; }
+  .cart-drawer {
+    position: fixed; top: 0; right: 0; height: 100vh; height: 100dvh; width: min(420px, 100vw);
+    background: var(--bg); z-index: 61; transform: translateX(100%); transition: transform 0.25s ease;
+    display: flex; flex-direction: column; min-height: 0; box-shadow: -10px 0 30px rgba(0,0,0,0.2);
+  }
+  .cart-drawer.open { transform: translateX(0); }
+  .cart-head {
+    flex: none; background: var(--paper); border-bottom: 1px solid var(--line); padding: 18px 20px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .cart-head h3 { font-family: 'Sora', 'Noto Sans Tamil', sans-serif; margin: 0; font-size: 17px; color: var(--ink); }
+  .cart-close {
+    background: var(--accent-soft); border: none; color: var(--accent); width: 30px; height: 30px;
+    border-radius: 50%; font-size: 15px; cursor: pointer;
+  }
+  .cart-scroll { flex: 1; min-height: 0; overflow-y: auto; -webkit-overflow-scrolling: touch; overscroll-behavior: contain; }
+  .cart-body { padding: 10px 20px; }
+  .cart-empty { text-align: center; padding: 46px 10px; color: var(--muted); font-size: 13.5px; line-height: 1.6; }
+  .cart-line { display: flex; align-items: center; gap: 10px; padding: 12px 0; border-bottom: 1px solid var(--line); }
+  .cart-line-name { flex: 1; font-weight: 600; font-size: 13.5px; color: var(--ink); }
+  .cart-line-name small { display: block; color: var(--muted); font-size: 11.5px; font-weight: 400; margin-top: 2px; }
+  .cart-line .qty-stepper { border-color: var(--line); }
+  .cart-line-remove { background: none; border: none; color: #C6413B; font-size: 15px; padding: 4px; cursor: pointer; }
+
+  .party-details { border-top: 1px dashed var(--line); padding: 4px 20px 0; }
+  .party-toggle {
+    width: 100%; background: none; border: none; text-align: left; padding: 12px 0; font-weight: 700;
+    font-size: 13.5px; color: var(--ink); display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; cursor: pointer;
+    font-family: inherit;
+  }
+  .party-toggle-hint { font-weight: 400; font-size: 11.5px; color: var(--muted); }
+  .party-form { display: flex; flex-direction: column; gap: 10px; padding-bottom: 14px; }
+  .party-form .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .party-form .field label { display: block; font-size: 11.5px; font-weight: 700; color: var(--muted); margin-bottom: 4px; }
+  .party-form .field input {
+    width: 100%; padding: 8px 10px; border: 1.5px solid var(--line); border-radius: 8px; font-family: inherit;
+    font-size: 13.5px; background: var(--paper); color: var(--ink);
+  }
+  .party-form .field input:focus { border-color: var(--accent); outline: none; }
+
+  .cart-summary { flex: none; border-top: 1px solid var(--line); padding: 16px 20px calc(22px + env(safe-area-inset-bottom, 0px)); background: var(--paper); }
+  .summary-row { display: flex; justify-content: space-between; font-size: 13.5px; margin-bottom: 6px; color: var(--muted); }
+  .summary-row.total { font-size: 18px; font-weight: 700; color: var(--ink); margin-top: 10px; }
+  .summary-note { font-size: 11.5px; color: var(--muted); margin: 8px 0 14px; line-height: 1.45; }
+  .checkout-btn {
+    width: 100%; background: var(--accent); color: #fff; border: none; padding: 13px; border-radius: 10px;
+    font-weight: 700; font-size: 14px; display: flex; align-items: center; justify-content: center; gap: 8px;
+    cursor: pointer; font-family: inherit;
+  }
+  .checkout-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+  .checkout-btn.share-btn { background: #1FA855; margin-top: 10px; }
+  .clear-cart-btn {
+    width: 100%; background: transparent; color: #C6413B; border: 1.5px solid #F1CFCD; padding: 10px;
+    border-radius: 10px; font-weight: 600; font-size: 13px; margin-top: 12px; cursor: pointer; font-family: inherit;
+  }
+  .clear-cart-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+  .clear-cart-btn:not(:disabled):hover { background: #FBEDEC; }
+
+  /* ================= TOAST ================= */
+  .toast {
+    position: fixed; left: 50%; bottom: 28px; transform: translate(-50%, 20px); background: var(--ink); color: #fff;
+    padding: 11px 20px; border-radius: 999px; font-size: 13px; font-weight: 500; opacity: 0; pointer-events: none;
+    transition: opacity 0.2s ease, transform 0.2s ease; z-index: 70; max-width: 90vw; text-align: center;
+  }
+  .toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+  @media (max-width: 600px) {
+    .cart-drawer { width: 100vw; }
+  }
 </style>
 </head>
 <body>
 
 <header>
   <div class="header-inner">
-    <div class="eyebrow" id="tagline">Madurai · Electrical &amp; Hardware Supplies</div>
-    <h1 id="shop-name">Sri Maruthi Traders</h1>
-    <p class="subtitle">Current price list for water line clamp, apartment clamp, bore cover, bore clamp, motor bed, cable clip, wire tag.</p>
-    <div class="updated" id="last-updated"></div>
+    <div class="header-top">
+      <div class="header-title">
+        <div class="eyebrow" id="tagline">Madurai · Electrical &amp; Hardware Supplies</div>
+        <h1 id="shop-name">Sri Maruthi Traders</h1>
+        <p class="subtitle">Current price list for water line clamp, apartment clamp, bore cover, bore clamp, motor bed, cable clip, wire tag.</p>
+        <div class="updated" id="last-updated"></div>
+      </div>
+      <div class="header-actions">
+        <a class="icon-btn" id="waHeaderBtn" href="#" target="_blank" rel="noopener" style="display:none;">💬 WhatsApp</a>
+        <button type="button" class="icon-btn cart-btn" id="openCartBtn">🧾 Order <span class="cart-count" id="cartCount">0</span></button>
+      </div>
+    </div>
   </div>
 </header>
 
@@ -156,12 +276,142 @@
   Prices subject to change without notice. For bulk orders, contact <strong id="footer-shop-name">Sri Maruthi Traders</strong>.
 </footer>
 
+<!-- Cart drawer -->
+<div class="cart-overlay" id="cartOverlay"></div>
+<aside class="cart-drawer" id="cartDrawer" aria-label="Order list">
+  <div class="cart-head">
+    <h3>🧾 Your Order</h3>
+    <button class="cart-close" id="closeCartBtn" aria-label="Close order">✕</button>
+  </div>
+  <div class="cart-scroll" id="cartScroll">
+    <div class="cart-body" id="cartBody"></div>
+
+    <div class="party-details">
+      <button type="button" class="party-toggle" id="partyToggle" aria-expanded="false">
+        📋 Delivery &amp; dispatch details <span class="party-toggle-hint">(optional, shown on your PDF order)</span>
+      </button>
+      <div class="party-form" id="partyForm" hidden>
+        <div class="field">
+          <label for="pd-name">Party Name</label>
+          <input type="text" id="pd-name" placeholder="Your name / shop name">
+        </div>
+        <div class="field">
+          <label for="pd-address">Address</label>
+          <input type="text" id="pd-address" placeholder="Address line">
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label for="pd-phone">Ph.</label>
+            <input type="text" id="pd-phone" inputmode="tel" placeholder="Phone">
+          </div>
+          <div class="field">
+            <label for="pd-cell">Cell</label>
+            <input type="text" id="pd-cell" inputmode="tel" placeholder="Cell">
+          </div>
+        </div>
+        <div class="field">
+          <label for="pd-transport">Transport Name</label>
+          <input type="text" id="pd-transport" placeholder="e.g. TNSTC parcel, courier">
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label for="pd-from">Dispatch From</label>
+            <input type="text" id="pd-from" placeholder="Madurai">
+          </div>
+          <div class="field">
+            <label for="pd-to">Dispatch To</label>
+            <input type="text" id="pd-to" placeholder="Your town">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="cart-summary">
+    <div class="summary-row"><span>Items</span><span id="sumItems">0</span></div>
+    <div class="summary-row"><span>Subtotal</span><span id="sumSubtotal">₹0</span></div>
+    <div class="summary-row total"><span>Total</span><span id="sumTotal">₹0</span></div>
+    <p class="summary-note">Final rate, packing &amp; transport charges will be confirmed by the shop on WhatsApp before dispatch.</p>
+    <button class="checkout-btn" id="checkoutBtn" disabled>
+      ⬇️ Download Order (PDF)
+    </button>
+    <button class="checkout-btn share-btn" id="shareBtn" disabled>
+      📤 Share Order on WhatsApp
+    </button>
+    <p class="summary-note" id="pdfHint">Save the PDF, then send it to us on WhatsApp: <strong id="pdfHintNumber"></strong></p>
+    <button class="clear-cart-btn" id="clearCartBtn" disabled>🗑️ Clear Order</button>
+  </div>
+</aside>
+
+<div class="toast" id="toast"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script>
   let CATALOG = [];
+  let ITEM_BY_ID = {};
+  let SHOP_INFO = {};
   const collapsedState = new Set();
   const collapsedSubState = new Set();
 
+  const CART_KEY = 'smtOrder.cart.v1';
+  let cart = loadCart();
+
   function formatPrice(n) { return n.toLocaleString('en-IN'); }
+  function money(n) { return '₹' + Number(n).toLocaleString('en-IN'); }
+
+  function loadCart() {
+    try {
+      const raw = localStorage.getItem(CART_KEY);
+      return raw ? JSON.parse(raw) : {};
+    } catch (e) { return {}; }
+  }
+  function saveCart() { localStorage.setItem(CART_KEY, JSON.stringify(cart)); }
+
+  function addToCart(item, qty) {
+    if (!cart[item.id]) cart[item.id] = { id: item.id, qty: 0 };
+    cart[item.id].qty += qty;
+    saveCart();
+    renderCart();
+    renderCatalog(document.getElementById('search').value);
+  }
+  function removeFromCart(id) {
+    delete cart[id];
+    saveCart();
+    renderCart();
+    renderCatalog(document.getElementById('search').value);
+  }
+  function setQty(id, qty) {
+    if (!cart[id]) return;
+    cart[id].qty = qty;
+    if (cart[id].qty <= 0) delete cart[id];
+    saveCart();
+    renderCart();
+    renderCatalog(document.getElementById('search').value);
+  }
+  function clearCart() {
+    Object.keys(cart).forEach(id => delete cart[id]);
+    saveCart();
+    clearPartyDetails();
+    renderCart();
+    renderCatalog(document.getElementById('search').value);
+  }
+  function clearPartyDetails() {
+    ['pd-name', 'pd-address', 'pd-phone', 'pd-cell', 'pd-transport', 'pd-from', 'pd-to'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.value = '';
+    });
+  }
+  function getPartyDetails() {
+    return {
+      name: document.getElementById('pd-name').value.trim(),
+      address: document.getElementById('pd-address').value.trim(),
+      phone: document.getElementById('pd-phone').value.trim(),
+      cell: document.getElementById('pd-cell').value.trim(),
+      transport: document.getElementById('pd-transport').value.trim(),
+      from: document.getElementById('pd-from').value.trim(),
+      to: document.getElementById('pd-to').value.trim()
+    };
+  }
 
   function renderCatalog(filterText) {
     const catalogEl = document.getElementById('catalog');
@@ -175,15 +425,50 @@
       const list = document.createElement('div');
       list.className = 'item-list';
       items.forEach(item => {
+        const inCart = cart[item.id];
+        const qty = inCart ? inCart.qty : 1;
+
         const row = document.createElement('div');
         row.className = 'item-row';
+        row.dataset.id = item.id;
         row.innerHTML = `
           <div class="item-info">
             <div class="item-name">${item.name}</div>
             ${item.unit ? `<div class="item-unit">${item.unit}</div>` : ''}
           </div>
           <div class="item-price"><span class="rupee">₹</span>${formatPrice(item.price)}</div>
+          <div class="item-controls">
+            <div class="qty-stepper">
+              <button type="button" class="qty-minus" aria-label="Decrease quantity">−</button>
+              <input type="text" inputmode="numeric" class="qty-input" value="${qty}" aria-label="Quantity">
+              <button type="button" class="qty-plus" aria-label="Increase quantity">+</button>
+            </div>
+            <button type="button" class="add-btn${inCart ? ' added' : ''}">${inCart ? 'Added ✓' : 'Add'}</button>
+          </div>
         `;
+
+        const qtyInput = row.querySelector('.qty-input');
+        function applyQty(newQty) {
+          const v = Math.max(1, Math.min(999, newQty || 1));
+          qtyInput.value = v;
+          // If already in the order, the stepper adjusts the order quantity live.
+          if (cart[item.id]) setQty(item.id, v);
+        }
+        row.querySelector('.qty-minus').addEventListener('click', () => {
+          applyQty((parseInt(qtyInput.value, 10) || 1) - 1);
+        });
+        row.querySelector('.qty-plus').addEventListener('click', () => {
+          applyQty((parseInt(qtyInput.value, 10) || 1) + 1);
+        });
+        qtyInput.addEventListener('change', () => applyQty(parseInt(qtyInput.value, 10)));
+        qtyInput.addEventListener('click', (e) => e.stopPropagation());
+
+        row.querySelector('.add-btn').addEventListener('click', () => {
+          const q = Math.max(1, parseInt(qtyInput.value, 10) || 1);
+          addToCart(item, q);
+          showToast(`${item.name} added to order`);
+        });
+
         list.appendChild(row);
       });
       return list;
@@ -274,7 +559,22 @@
       const data = await res.json();
       CATALOG = data.catalog || [];
 
+      ITEM_BY_ID = {};
+      CATALOG.forEach(cat => {
+        (cat.items || []).forEach(i => { ITEM_BY_ID[i.id] = i; });
+        (cat.subcategories || []).forEach(sub => (sub.items || []).forEach(i => { ITEM_BY_ID[i.id] = i; }));
+      });
+
       const info = data.shopInfo || {};
+      SHOP_INFO = info;
+      if (info.whatsapp) {
+        const waDigits = info.whatsapp.replace(/[^0-9]/g, '');
+        const waHeaderBtn = document.getElementById('waHeaderBtn');
+        const genericMsg = encodeURIComponent(`Hi ${info.shop_name || 'Sri Maruthi Traders'}, I'd like to know more about your price list.`);
+        waHeaderBtn.href = `https://wa.me/${waDigits}?text=${genericMsg}`;
+        waHeaderBtn.style.display = 'flex';
+        document.getElementById('pdfHintNumber').textContent = info.whatsapp;
+      }
       if (info.shop_name) {
         document.getElementById('shop-name').textContent = info.shop_name;
         document.getElementById('footer-shop-name').textContent = info.shop_name;
@@ -299,6 +599,7 @@
 
       document.getElementById('loading').style.display = 'none';
       renderCatalog('');
+      renderCart();
     } catch (err) {
       document.getElementById('loading').textContent = 'Could not load price list. Please try again shortly.';
     }
@@ -318,6 +619,278 @@
     });
     renderCatalog(document.getElementById('search').value);
   });
+
+  /* ================= CART DRAWER ================= */
+  const cartBody = document.getElementById('cartBody');
+  const cartCount = document.getElementById('cartCount');
+  const sumItems = document.getElementById('sumItems');
+  const sumSubtotal = document.getElementById('sumSubtotal');
+  const sumTotal = document.getElementById('sumTotal');
+  const checkoutBtn = document.getElementById('checkoutBtn');
+  const shareBtn = document.getElementById('shareBtn');
+  const clearCartBtn = document.getElementById('clearCartBtn');
+
+  function renderCart() {
+    const entries = Object.values(cart);
+    cartBody.innerHTML = '';
+
+    if (!entries.length) {
+      cartBody.innerHTML = `<div class="cart-empty">🧾<br>Your order is empty.<br>Add items from the price list to get started!</div>`;
+    }
+
+    let totalQty = 0;
+    let totalAmount = 0;
+
+    entries.forEach(entry => {
+      const item = ITEM_BY_ID[entry.id];
+      if (!item) return;
+      totalQty += entry.qty;
+      const lineTotal = item.price * entry.qty;
+      totalAmount += lineTotal;
+
+      const line = document.createElement('div');
+      line.className = 'cart-line';
+      line.innerHTML = `
+        <div class="cart-line-name">${item.name}
+          <small>${money(item.price)} × ${entry.qty} = ${money(lineTotal)}</small>
+        </div>
+        <div class="qty-stepper">
+          <button type="button" class="cl-minus" aria-label="Decrease quantity">−</button>
+          <input type="text" inputmode="numeric" class="cl-qty" value="${entry.qty}" aria-label="Quantity">
+          <button type="button" class="cl-plus" aria-label="Increase quantity">+</button>
+        </div>
+        <button type="button" class="cart-line-remove" aria-label="Remove item">🗑</button>
+      `;
+      line.querySelector('.cl-minus').addEventListener('click', () => setQty(entry.id, entry.qty - 1));
+      line.querySelector('.cl-plus').addEventListener('click', () => setQty(entry.id, entry.qty + 1));
+      line.querySelector('.cl-qty').addEventListener('change', (e) => {
+        const v = Math.max(0, parseInt(e.target.value, 10) || 0);
+        setQty(entry.id, v);
+      });
+      line.querySelector('.cart-line-remove').addEventListener('click', () => removeFromCart(entry.id));
+
+      cartBody.appendChild(line);
+    });
+
+    cartCount.textContent = totalQty;
+    sumItems.textContent = totalQty;
+    sumSubtotal.textContent = money(totalAmount);
+    sumTotal.textContent = money(totalAmount);
+    checkoutBtn.disabled = totalQty === 0;
+    shareBtn.disabled = totalQty === 0;
+    clearCartBtn.disabled = totalQty === 0;
+  }
+
+  /* ---------------- party details toggle ---------------- */
+  const partyToggle = document.getElementById('partyToggle');
+  const partyForm = document.getElementById('partyForm');
+  partyToggle.addEventListener('click', () => {
+    const isHidden = partyForm.hasAttribute('hidden');
+    if (isHidden) { partyForm.removeAttribute('hidden'); } else { partyForm.setAttribute('hidden', ''); }
+    partyToggle.setAttribute('aria-expanded', String(isHidden));
+  });
+
+  /* ---------------- drawer open/close ---------------- */
+  const overlay = document.getElementById('cartOverlay');
+  const drawer = document.getElementById('cartDrawer');
+  function openCart() { overlay.classList.add('open'); drawer.classList.add('open'); }
+  function closeCart() { overlay.classList.remove('open'); drawer.classList.remove('open'); }
+  document.getElementById('openCartBtn').addEventListener('click', openCart);
+  document.getElementById('closeCartBtn').addEventListener('click', closeCart);
+  overlay.addEventListener('click', closeCart);
+
+  clearCartBtn.addEventListener('click', () => {
+    if (!Object.keys(cart).length) return;
+    if (confirm('Clear all items from your order?')) {
+      clearCart();
+      showToast('Order cleared');
+    }
+  });
+
+  checkoutBtn.addEventListener('click', () => {
+    const entries = Object.values(cart);
+    if (!entries.length) return;
+
+    const party = getPartyDetails();
+    const { pdfBlob, fileName } = buildOrderPdf(entries, party);
+
+    const url = URL.createObjectURL(pdfBlob);
+    const a = document.createElement('a');
+    a.href = url; a.download = fileName;
+    document.body.appendChild(a); a.click(); a.remove();
+    URL.revokeObjectURL(url);
+
+    showToast('Order downloaded — send it to us on WhatsApp!');
+  });
+
+  shareBtn.addEventListener('click', async () => {
+    const entries = Object.values(cart);
+    if (!entries.length) return;
+
+    const party = getPartyDetails();
+    const { pdfBlob, fileName } = buildOrderPdf(entries, party);
+    const shopName = SHOP_INFO.shop_name || 'Sri Maruthi Traders';
+    const waDigits = (SHOP_INFO.whatsapp || '').replace(/[^0-9]/g, '');
+
+    // Best case: the browser's native share sheet lets the person pick
+    // WhatsApp themselves with the PDF already attached. Only available
+    // on most mobile browsers over https.
+    let shared = false;
+    if (navigator.canShare && navigator.share) {
+      try {
+        const file = new File([pdfBlob], fileName, { type: 'application/pdf' });
+        if (navigator.canShare({ files: [file] })) {
+          await navigator.share({
+            files: [file],
+            title: `${shopName} — Order`,
+            text: `My order from ${shopName}`
+          });
+          shared = true;
+        }
+      } catch (err) {
+        shared = false; // cancelled or failed — fall through to the guaranteed fallback below
+      }
+    }
+
+    if (shared === true) {
+      showToast('Order shared!');
+    } else {
+      const url = URL.createObjectURL(pdfBlob);
+      const a = document.createElement('a');
+      a.href = url; a.download = fileName;
+      document.body.appendChild(a); a.click(); a.remove();
+      URL.revokeObjectURL(url);
+
+      if (waDigits) {
+        const msg = encodeURIComponent(`Hi ${shopName}, sharing my order — PDF attached below.`);
+        window.open(`https://api.whatsapp.com/send?phone=${waDigits}&text=${msg}`, '_blank');
+      }
+      showToast('Order downloaded — attach it in the WhatsApp chat that just opened');
+    }
+  });
+
+  /* ---------------- PDF generation ---------------- */
+  function buildOrderPdf(entries, party) {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF({ unit: 'pt', format: 'a4' });
+    const marginX = 40;
+    let y = 50;
+    const shopName = SHOP_INFO.shop_name || 'Sri Maruthi Traders';
+    const tagline = SHOP_INFO.tagline || '';
+    const address = SHOP_INFO.address || '';
+    const whatsappDisplay = SHOP_INFO.whatsapp || '';
+
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(18);
+    doc.setTextColor(46, 95, 232);
+    doc.text(shopName, marginX, y);
+
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(9);
+    doc.setTextColor(107, 114, 128);
+    y += 16;
+    if (tagline) { doc.text(tagline, marginX, y); y += 13; }
+    if (address) { doc.text(address, marginX, y, { maxWidth: 500 }); y += 13; }
+    if (whatsappDisplay) { doc.text('WhatsApp: ' + whatsappDisplay, marginX, y); y += 13; }
+
+    y += 12;
+    doc.setDrawColor(46, 95, 232);
+    doc.setLineWidth(1);
+    doc.line(marginX, y, 555, y);
+
+    y += 20;
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(11);
+    doc.setTextColor(27, 35, 48);
+    doc.text('Particulars', marginX, y);
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(9.5);
+    y += 16;
+    const partyLines = [
+      ['Party Name', party.name || '-'],
+      ['Address', party.address || '-'],
+      ['Ph.', party.phone || '-', 'Cell', party.cell || '-'],
+      ['Transport Name', party.transport || '-'],
+      ['Dispatch From', party.from || '-', 'Dispatch To', party.to || '-']
+    ];
+    partyLines.forEach(row => {
+      if (row.length === 2) {
+        doc.text(`${row[0]}: ${row[1]}`, marginX, y, { maxWidth: 515 });
+      } else {
+        doc.text(`${row[0]}: ${row[1]}`, marginX, y);
+        doc.text(`${row[2]}: ${row[3]}`, marginX + 270, y);
+      }
+      y += 15;
+    });
+
+    y += 8;
+    doc.setDrawColor(46, 95, 232);
+    doc.line(marginX, y, 555, y);
+    y += 20;
+
+    // table header
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(9.5);
+    doc.text('#', marginX, y);
+    doc.text('Item', marginX + 20, y);
+    doc.text('Unit', 330, y);
+    doc.text('Qty', 380, y);
+    doc.text('Rate', 420, y);
+    doc.text('Amount', 480, y);
+    y += 6;
+    doc.setDrawColor(200, 205, 215);
+    doc.line(marginX, y, 555, y);
+    y += 14;
+
+    doc.setFont('helvetica', 'normal');
+    let total = 0;
+    entries.forEach((entry, i) => {
+      const item = ITEM_BY_ID[entry.id];
+      if (!item) return;
+      if (y > 780) { doc.addPage(); y = 50; }
+      const lineTotal = item.price * entry.qty;
+      total += lineTotal;
+      doc.text(String(i + 1), marginX, y);
+      doc.text(item.name, marginX + 20, y, { maxWidth: 280 });
+      doc.text(item.unit || '-', 330, y);
+      doc.text(String(entry.qty), 380, y);
+      doc.text('Rs.' + item.price, 420, y);
+      doc.text('Rs.' + lineTotal, 480, y);
+      y += 16;
+    });
+
+    y += 6;
+    doc.setDrawColor(46, 95, 232);
+    doc.setLineWidth(1.2);
+    doc.line(marginX, y, 555, y);
+    y += 20;
+
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(13);
+    doc.setTextColor(46, 95, 232);
+    doc.text(`Total: Rs.${total}`, 420, y);
+
+    y += 20;
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(8.5);
+    doc.setTextColor(107, 114, 128);
+    doc.text('Prices subject to change without notice. Final rate confirmed by the shop before dispatch.', marginX, y);
+    y += 12;
+    doc.text('Supply subject to availability of stock.', marginX, y);
+
+    const fileName = `${shopName.replace(/\s+/g, '-')}-Order-${Date.now()}.pdf`;
+    return { pdfBlob: doc.output('blob'), fileName, total };
+  }
+
+  /* ---------------- toast ---------------- */
+  let toastTimer = null;
+  function showToast(text) {
+    const toast = document.getElementById('toast');
+    toast.textContent = text;
+    toast.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => toast.classList.remove('show'), 1600);
+  }
 
   loadCatalog();
 </script>
