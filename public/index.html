@@ -196,6 +196,13 @@
   .party-form .field input:focus { border-color: var(--accent); outline: none; }
 
   .cart-summary { flex: none; border-top: 1px solid var(--line); padding: 16px 20px calc(22px + env(safe-area-inset-bottom, 0px)); background: var(--paper); }
+  .packing-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 4px 0 10px; }
+  .packing-row .field label { display: block; font-size: 11px; font-weight: 700; color: var(--muted); margin-bottom: 4px; }
+  .packing-row .field input {
+    width: 100%; padding: 8px 10px; border: 1.5px solid var(--line); border-radius: 8px; font-family: inherit;
+    font-size: 13.5px; background: var(--bg); color: var(--ink);
+  }
+  .packing-row .field input:focus { border-color: var(--accent); outline: none; background: var(--paper); }
   .summary-row { display: flex; justify-content: space-between; font-size: 13.5px; margin-bottom: 6px; color: var(--muted); }
   .summary-row.total { font-size: 18px; font-weight: 700; color: var(--ink); margin-top: 10px; }
   .summary-note { font-size: 11.5px; color: var(--muted); margin: 8px 0 14px; line-height: 1.45; }
@@ -331,8 +338,21 @@
   <div class="cart-summary">
     <div class="summary-row"><span>Items</span><span id="sumItems">0</span></div>
     <div class="summary-row"><span>Subtotal</span><span id="sumSubtotal">₹0</span></div>
+
+    <div class="packing-row">
+      <div class="field">
+        <label for="pk-count">No. of packages</label>
+        <input type="text" id="pk-count" inputmode="numeric" placeholder="0">
+      </div>
+      <div class="field">
+        <label for="pk-rate">Rate per package (₹)</label>
+        <input type="text" id="pk-rate" inputmode="numeric" placeholder="0">
+      </div>
+    </div>
+    <div class="summary-row"><span>Packing charge</span><span id="sumPacking">₹0</span></div>
+
     <div class="summary-row total"><span>Total</span><span id="sumTotal">₹0</span></div>
-    <p class="summary-note">Final rate, packing &amp; transport charges will be confirmed by the shop on WhatsApp before dispatch.</p>
+    <p class="summary-note">Final rate &amp; transport charges will be confirmed by the shop on WhatsApp before dispatch.</p>
     <button class="checkout-btn" id="checkoutBtn" disabled>
       ⬇️ Download Order (PDF)
     </button>
@@ -355,7 +375,9 @@
   const collapsedSubState = new Set();
 
   const CART_KEY = 'smtOrder.cart.v1';
+  const PACKING_KEY = 'smtOrder.packing.v1';
   let cart = loadCart();
+  let packing = loadPacking();
 
   function formatPrice(n) { return n.toLocaleString('en-IN'); }
   function money(n) { return '₹' + Number(n).toLocaleString('en-IN'); }
@@ -367,6 +389,21 @@
     } catch (e) { return {}; }
   }
   function saveCart() { localStorage.setItem(CART_KEY, JSON.stringify(cart)); }
+
+  function loadPacking() {
+    try {
+      const raw = localStorage.getItem(PACKING_KEY);
+      return raw ? JSON.parse(raw) : { count: 0, rate: 0 };
+    } catch (e) { return { count: 0, rate: 0 }; }
+  }
+  function savePacking() { localStorage.setItem(PACKING_KEY, JSON.stringify(packing)); }
+  function getPackingCharge() { return (packing.count || 0) * (packing.rate || 0); }
+  function clearPacking() {
+    packing = { count: 0, rate: 0 };
+    savePacking();
+    document.getElementById('pk-count').value = '';
+    document.getElementById('pk-rate').value = '';
+  }
 
   function addToCart(item, qty) {
     if (!cart[item.id]) cart[item.id] = { id: item.id, qty: 0 };
@@ -393,6 +430,7 @@
     Object.keys(cart).forEach(id => delete cart[id]);
     saveCart();
     clearPartyDetails();
+    clearPacking();
     renderCart();
     renderCatalog(document.getElementById('search').value);
   }
@@ -628,10 +666,26 @@
   const cartCount = document.getElementById('cartCount');
   const sumItems = document.getElementById('sumItems');
   const sumSubtotal = document.getElementById('sumSubtotal');
+  const sumPacking = document.getElementById('sumPacking');
   const sumTotal = document.getElementById('sumTotal');
   const checkoutBtn = document.getElementById('checkoutBtn');
   const shareBtn = document.getElementById('shareBtn');
   const clearCartBtn = document.getElementById('clearCartBtn');
+  const pkCountInput = document.getElementById('pk-count');
+  const pkRateInput = document.getElementById('pk-rate');
+
+  pkCountInput.value = packing.count || '';
+  pkRateInput.value = packing.rate || '';
+  pkCountInput.addEventListener('input', () => {
+    packing.count = Math.max(0, parseInt(pkCountInput.value, 10) || 0);
+    savePacking();
+    renderCart();
+  });
+  pkRateInput.addEventListener('input', () => {
+    packing.rate = Math.max(0, parseFloat(pkRateInput.value) || 0);
+    savePacking();
+    renderCart();
+  });
 
   function renderCart() {
     const entries = Object.values(cart);
@@ -642,14 +696,14 @@
     }
 
     let totalQty = 0;
-    let totalAmount = 0;
+    let subtotal = 0;
 
     entries.forEach(entry => {
       const item = ITEM_BY_ID[entry.id];
       if (!item) return;
       totalQty += entry.qty;
       const lineTotal = item.price * entry.qty;
-      totalAmount += lineTotal;
+      subtotal += lineTotal;
 
       const catPath = item.subcategoryName ? `${item.categoryName} › ${item.subcategoryName}` : (item.categoryName || '');
 
@@ -678,9 +732,13 @@
       cartBody.appendChild(line);
     });
 
+    const packingCharge = getPackingCharge();
+    const totalAmount = subtotal + packingCharge;
+
     cartCount.textContent = totalQty;
     sumItems.textContent = totalQty;
-    sumSubtotal.textContent = money(totalAmount);
+    sumSubtotal.textContent = money(subtotal);
+    sumPacking.textContent = money(packingCharge);
     sumTotal.textContent = money(totalAmount);
     checkoutBtn.disabled = totalQty === 0;
     shareBtn.disabled = totalQty === 0;
@@ -881,12 +939,28 @@
     doc.setDrawColor(46, 95, 232);
     doc.setLineWidth(1.2);
     doc.line(marginX, y, 555, y);
-    y += 20;
+    y += 18;
 
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(9.5);
+    doc.setTextColor(27, 35, 48);
+    doc.text('Subtotal', 420, y);
+    doc.text('Rs.' + total, 480, y);
+
+    const packingCharge = getPackingCharge();
+    let grandTotal = total;
+    if (packingCharge > 0) {
+      y += 15;
+      doc.text(`Packing (${packing.count} x Rs.${packing.rate})`, 380, y);
+      doc.text('Rs.' + packingCharge, 480, y);
+      grandTotal += packingCharge;
+    }
+
+    y += 20;
     doc.setFont('helvetica', 'bold');
     doc.setFontSize(13);
     doc.setTextColor(46, 95, 232);
-    doc.text(`Total: Rs.${total}`, 420, y);
+    doc.text(`Total: Rs.${grandTotal}`, 420, y);
 
     y += 20;
     doc.setFont('helvetica', 'normal');
@@ -897,7 +971,7 @@
     doc.text('Supply subject to availability of stock.', marginX, y);
 
     const fileName = `${shopName.replace(/\s+/g, '-')}-Order-${Date.now()}.pdf`;
-    return { pdfBlob: doc.output('blob'), fileName, total };
+    return { pdfBlob: doc.output('blob'), fileName, total: grandTotal };
   }
 
   /* ---------------- toast ---------------- */
