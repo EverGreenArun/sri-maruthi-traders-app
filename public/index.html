@@ -175,6 +175,7 @@
   .cart-line { display: flex; align-items: center; gap: 10px; padding: 12px 0; border-bottom: 1px solid var(--line); }
   .cart-line-name { flex: 1; font-weight: 600; font-size: 13.5px; color: var(--ink); }
   .cart-line-name small { display: block; color: var(--muted); font-size: 11.5px; font-weight: 400; margin-top: 2px; }
+  .cart-line-name small.cart-line-cat { color: var(--accent); font-weight: 600; text-transform: uppercase; letter-spacing: 0.03em; font-size: 10.5px; margin-top: 3px; }
   .cart-line .qty-stepper { border-color: var(--line); }
   .cart-line-remove { background: none; border: none; color: #C6413B; font-size: 15px; padding: 4px; cursor: pointer; }
 
@@ -561,8 +562,10 @@
 
       ITEM_BY_ID = {};
       CATALOG.forEach(cat => {
-        (cat.items || []).forEach(i => { ITEM_BY_ID[i.id] = i; });
-        (cat.subcategories || []).forEach(sub => (sub.items || []).forEach(i => { ITEM_BY_ID[i.id] = i; }));
+        (cat.items || []).forEach(i => { ITEM_BY_ID[i.id] = { ...i, categoryName: cat.name, subcategoryName: null }; });
+        (cat.subcategories || []).forEach(sub => (sub.items || []).forEach(i => {
+          ITEM_BY_ID[i.id] = { ...i, categoryName: cat.name, subcategoryName: sub.name };
+        }));
       });
 
       const info = data.shopInfo || {};
@@ -648,10 +651,13 @@
       const lineTotal = item.price * entry.qty;
       totalAmount += lineTotal;
 
+      const catPath = item.subcategoryName ? `${item.categoryName} › ${item.subcategoryName}` : (item.categoryName || '');
+
       const line = document.createElement('div');
       line.className = 'cart-line';
       line.innerHTML = `
         <div class="cart-line-name">${item.name}
+          ${catPath ? `<small class="cart-line-cat">${catPath}</small>` : ''}
           <small>${money(item.price)} × ${entry.qty} = ${money(lineTotal)}</small>
         </div>
         <div class="qty-stepper">
@@ -847,15 +853,27 @@
     entries.forEach((entry, i) => {
       const item = ITEM_BY_ID[entry.id];
       if (!item) return;
-      if (y > 780) { doc.addPage(); y = 50; }
+      if (y > 770) { doc.addPage(); y = 50; }
       const lineTotal = item.price * entry.qty;
       total += lineTotal;
+      const catPath = item.subcategoryName ? `${item.categoryName} \u203a ${item.subcategoryName}` : (item.categoryName || '');
+
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(9.5);
+      doc.setTextColor(27, 35, 48);
       doc.text(String(i + 1), marginX, y);
       doc.text(item.name, marginX + 20, y, { maxWidth: 280 });
       doc.text(item.unit || '-', 330, y);
       doc.text(String(entry.qty), 380, y);
       doc.text('Rs.' + item.price, 420, y);
       doc.text('Rs.' + lineTotal, 480, y);
+
+      if (catPath) {
+        y += 11;
+        doc.setFontSize(7.5);
+        doc.setTextColor(107, 114, 128);
+        doc.text(catPath, marginX + 20, y, { maxWidth: 280 });
+      }
       y += 16;
     });
 
